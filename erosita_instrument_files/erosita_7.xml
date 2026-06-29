@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!-- SRG eROSITA version 1.8.0 -->
+<instrument telescop="eROSITA" instrume="TM7">
+
+<telescope>
+  <!-- Telescope 7: only filter wheel -->  
+  <arf filename="tm7_arf_filter_000101v02.fits"/>
+  <fov diameter="1.02"/>
+  <focallength value="1.6"/>
+  <vignetting filename="erosita_vignetting_tm7_v4.0.fits"/>
+  <pha2pi filename="erosita_pha2pi_v20210719.fits"/>
+  <pirmf filename="erosita_pirmf_v20210719.rmf"/>
+  <psf filename="tm7_2dpsf_190219v05.fits"/>
+</telescope>
+
+<detector>
+  <dimensions xwidth="384" ywidth="384"/>
+  <pixelborder x="0." y="0."/>
+  <wcs xrpix="192.5" yrpix="192.5" xrval="0." yrval="0." 
+       xdelt="75.e-6" ydelt="75.e-6" rota="-210"/>
+  <rmf filename="sixte_erormf_normalized_singles_20170725.rmf"/>
+  <cte value="1"/>
+  <split type="exponential" par1="0.355"/>
+  <phabackground filename="particle_bkg_eFEDS_V2_20210607.pha"/>
+   <threshold_readout_lo_keV value="60.0e-3"/>
+  <threshold_event_lo_keV value="60.0e-3"/>
+  
+  <threshold_pattern_up_keV value="10."/>
+  
+  <readout mode="time">
+    <wait time="0.05"/>
+	
+    <loop start="0" end="383" increment="1" variable="$i">
+      <readoutline lineindex="0" readoutindex="$i"/>
+      <lineshift/>
+      <wait time="0.3e-6"/>
+    </loop>
+
+    <newframe/>
+  </readout>
+</detector>
+
+</instrument>

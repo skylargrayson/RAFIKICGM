@@ -1,0 +1,98 @@
+Overview
+===================
+
+RAFIKI-CGM was developed to provide an easy-to-use tool for generating mock stacked CGM data from hydrodynamic simulations. The 
+set of RAFIKI-CGM data products are generated from a suite of 
+
+.. _sim_options:
+
+Simulations 
+-----------
+The data products in RAFIKI-CGM are generated from three different simulations/simulation suites. Here we briefly summarize the differences and provide 
+links for finding more information. 
+
++-------------------------+--------------------+-------------------+--------------------+
+| Simulation              | SIMBA              | EAGLE             | RAFIKI             |
++=========================+====================+===================+====================+
+| Reference Paper         | Dave et al. 2019   | Schaye et al. 2015| Grayson et al. 2026|
++-------------------------+--------------------+-------------------+--------------------+
+| Runs                    | Fiducial           |Fiducial and AGNdT9|Suite of 9 runs(A-I)|
++-------------------------+--------------------+-------------------+--------------------+
+| Box Size                | 50 Mpc/h           |50 Mpc/h           |50 Mpc/h            |
++-------------------------+--------------------+-------------------+--------------------+
+| Initial Gas Particle    |                    |                   |                    |
+| Mass (h^-1 M_\odot)     |                    |                   |                    |
++-------------------------+--------------------+-------------------+--------------------+
+| Softening Length        |                    |                   |                    |
++-------------------------+--------------------+-------------------+--------------------+
+| Cosmology               |  Planck 2016       |   Planck 2013     | Planck 2016        |
++-------------------------+--------------------+-------------------+--------------------+
+
+AGN Feedback Implmentations
+
+While RAFIKI-CGM can be used to explore a broad range of research questions related to the baryon cycle and the circumgalactic medium,
+the RAFIKI suite was intially developed specifically to probe the impact of feedback from active galactic nuclei (AGN). Thus we here briefly
+summarize the different treatments of AGN feedback in the simulations incorporated in RAFIKI-CGM. 
+
+SIMBA:
+
+RAFIKI:
+
+EAGLE: 
+
+
+Maps and Pre-Made Data Products
+-------------------------------
+
+The RAFIKI-CGM data products consist of: 
+
+- Maps of the Compton-y parameter projected along the x, y, and z simulation box axis.
+- Event files containing projected X-ray photon data (see `pyXSIM documentation <https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/photon_lists/event_lists.html>`_ for more detail)
+- Galaxy catalogs containing position, stellar mass, halo mass, virial radius, star formation rate, and age data
+
+
+
+Pipeline
+----------
+Existing RAFIKI-CGM Maps and Data Products:
+
+       
+
+RAFIKI-CGM Pipeline Flowchart:
+
+.. figure:: _static/images/rafiki_cgm_flowchart.drawio.svg
+    :width: 100%
+
+Generating Maps Flowchart:
+
+.. figure:: _static/images/makingmaps.drawio.svg
+    :width: 100%
+
+.. _selection-methods:
+
+Galaxy Selection
+----------------
+
+There are two ways to select your galaxy sample in RAFIKI-CGM. 
+
+**Ranges** (``selection.method: ranges``)
+    Selects all galaxies within the simulation that fall within specified galaxy property ranges. Currently cuts can be made by stellar mass, halo mass, specific star 
+    formation rate, and/or whether the galaxy is central in its halo. With this selection, sample size is set by how many galaxies in a given simulation box match the properties you choose. If no galaxies fit the criteria, the pipeline won't run. 
+
+**Matching** (``selection.method: matching``)
+    Resamples the simulation to match the stellar or halo mass distribution of a comparison catalog (i.e. an observational sample). Galaxies are binned and resampled with weights corresponding 
+    to the representation of their mass bin in the comparison distribution. 
+
+    Key parameters: 
+
+    - ``bins`` - mass bin edges used for matching distributions
+    - ``n_sample`` - number of galaxies to resample (the final stack will be three times this value, one per projection direction)
+    - ``match_property`` - property to match on (currently limited to ``stellar_mass`` or ``halo_mass``)
+
+    .. note::
+        Any cuts set in selection.property_ranges will also be applied before matching. This allows for cominations, for example applying a halo mass cut to exclude clusters before matching 
+        an observed stellar mass distribution
+
+    .. warning:: 
+        Larger ``n_sample`` values will more closely match the comparison catalog, but the runtime will increase accordingly.
+

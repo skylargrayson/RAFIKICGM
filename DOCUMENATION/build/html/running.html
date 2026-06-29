@@ -1,0 +1,441 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Running RAFIKI-CGM &#8212; RAFIKI-CGM 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Outputs" href="outputs.html" />
+    <link rel="prev" title="Galaxy Selection" href="overview/galaxy_selection.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="running-rafiki-cgm">
+<h1>Running RAFIKI-CGM<a class="headerlink" href="#running-rafiki-cgm" title="Permalink to this heading">¶</a></h1>
+<p>RAFIKI-CGM is running from the command line using a YAML configuration file. This controls all elements of the pipeline including the type of analysis, the simulations you want to use,
+and specific settings regarding instrument simulation, galaxy samples, and where outputs are ssaved. You can run the full pipeline using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>run_pipeline.py<span class="w"> </span>--config<span class="w"> </span>config.yaml
+</pre></div>
+</div>
+<section id="configuration-file">
+<h2>Configuration File<a class="headerlink" href="#configuration-file" title="Permalink to this heading">¶</a></h2>
+<p>A full example configuration file is shown below, as well as detailed documentation on each section.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># =============================================================================</span>
+<span class="c1"># RAFIKI-CGM Configuration File</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1">#Simulation Selection</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="nt">package_data</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/Volumes/easystore/RAFIKI_CGM_mock_library/&#39;</span>
+<span class="w">        </span><span class="nt">sim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RAFIKI_I</span><span class="w">                  </span><span class="c1">#Options: SIMBA, EAGLE, RAFIKI_A-I</span>
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1">#Analysis Selection</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Set to true to enable each data product</span>
+<span class="nt">analysis</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sz_radial_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1">#Stacked Compton-y radial profile</span>
+<span class="w">        </span><span class="nt">sz_moment_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1">#Stacked m=1/m=0 and m=2/m=0 moment profiles</span>
+<span class="w">        </span><span class="nt">thermal_energy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">           </span><span class="c1">#Thermal energy scaling relations</span>
+<span class="w">        </span><span class="nt">sz_stacked_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">          </span><span class="c1">#Stacked map of Compton-y parameter</span>
+<span class="w">        </span><span class="nt">xray_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">             </span><span class="c1">#Stacked X-ray surface brightnes profiles</span>
+<span class="w">        </span><span class="nt">xray_stacked_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1">#Stacked image of X-ray photon counts</span>
+
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Galaxy Selection Settings</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="nt">selection</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">matching</span><span class="w">                </span><span class="c1">#Options: ranges | matching</span>
+<span class="w">        </span><span class="c1">#Applied in both methods as an initial cut:</span>
+<span class="w">        </span><span class="nt">property_ranges</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">centrals_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">           </span><span class="c1">#Restrict to central galaxies only</span>
+<span class="w">                </span><span class="nt">stellar_mass_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8e10</span><span class="w">        </span><span class="c1"># Solar Masses (null=no cut)</span>
+<span class="w">                </span><span class="nt">stellar_mass_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">                </span><span class="nt">halo_mass_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">           </span><span class="c1"># Solar Massess</span>
+<span class="w">                </span><span class="nt">halo_mass_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1e14</span>
+<span class="w">                </span><span class="nt">ssfr_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">                </span><span class="c1"># Gyr^-1</span>
+<span class="w">                </span><span class="nt">ssfr_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">        </span><span class="c1">#Used only in method: matching</span>
+<span class="w">        </span><span class="nt">catalog</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep_CEN.csv</span><span class="w">            </span><span class="c1">#Comparison catalog</span>
+<span class="w">                </span><span class="nt">match_property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stellar_mass</span><span class="w">  </span><span class="c1">#Options: stellar_mass | halo_mass</span>
+<span class="w">                </span><span class="nt">column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                     </span><span class="c1">#Column index of match_property in catalog</span>
+<span class="w">                </span><span class="nt">bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">10.5</span><span class="p p-Indicator">,</span><span class="nv">10.6</span><span class="p p-Indicator">,</span><span class="nv">10.7</span><span class="p p-Indicator">,</span><span class="nv">10.8</span><span class="p p-Indicator">,</span><span class="nv">10.9</span><span class="p p-Indicator">,</span><span class="nv">11</span><span class="p p-Indicator">,</span>
+<span class="w">                        </span><span class="nv">11.1</span><span class="p p-Indicator">,</span><span class="nv">11.2</span><span class="p p-Indicator">,</span><span class="nv">11.3</span><span class="p p-Indicator">,</span><span class="nv">11.4</span><span class="p p-Indicator">,</span><span class="nv">11.5</span><span class="p p-Indicator">,</span><span class="nv">11.6</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1">#log10 solar masses</span>
+<span class="w">                </span><span class="nt">n_sample</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">150</span><span class="w">                 </span><span class="c1">#Number of galaxies in resampled selection</span>
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Thermal Sunyaev Zel&#39;dovich settings</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="nt">sz</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">redshift</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                                </span><span class="c1">#0.1, 0.5, 1, or 2</span>
+<span class="w">        </span><span class="nt">pixel_size_arcsec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">       </span><span class="c1">#Angular size of map pixel (arcsec, default=3)</span>
+<span class="w">        </span><span class="nt">stamp_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w">            </span><span class="c1">#Cutout size around each galaxy (arcmin)</span>
+<span class="w">        </span><span class="nt">gaussian_std</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">            </span><span class="c1">#Gaussian beam standard deviation (arcmin)</span>
+<span class="w">        </span><span class="nt">thermal_energy</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">aperture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">              </span><span class="c1">#Radius for thermal energy calculation</span>
+<span class="w">                </span><span class="nt">stellar_mass_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">10.7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">10.9</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">14.0</span><span class="p p-Indicator">]</span><span class="w">                </span><span class="c1"># log10 solar masses</span>
+<span class="w">                </span><span class="nt">halo_mass_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">12</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">16</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># log10 solar masses</span>
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># X-ray settings</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="nt">xray</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">redshift</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">               </span><span class="c1">#Snapshot redshift (currently only 0.1 supported)</span>
+<span class="w">        </span><span class="nt">soxs_instrument</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">erosita</span><span class="w">    </span><span class="c1">#Options: erosita | &lt;any SOXS instrument label&gt;</span>
+<span class="w">        </span><span class="nt">exposure_time_ks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w">      </span><span class="c1">#Exposure time (ks)</span>
+<span class="w">        </span><span class="nt">emin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                   </span><span class="c1">#Minimum energy (keV)</span>
+<span class="w">        </span><span class="nt">emax</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">                     </span><span class="c1">#Maximum energy (keV)</span>
+<span class="w">        </span><span class="nt">radial_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">10</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">30</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">50</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">75</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">100</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">200</span><span class="p p-Indicator">,</span>
+<span class="w">                                        </span><span class="nv">300</span><span class="p p-Indicator">,</span><span class="nv">400</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">500</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">600</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">700</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">800</span><span class="p p-Indicator">,</span>
+<span class="w">                                        </span><span class="nv">900</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1000</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1100</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1200</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1300</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1400</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1500</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1">#Radial bin edges (kpc)</span>
+<span class="w">        </span><span class="c1">#Background components for instrument simulation</span>
+<span class="w">        </span><span class="nt">ptsrc_bkgnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">        </span><span class="c1">#Point source background</span>
+<span class="w">        </span><span class="nt">instr_bkgnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">        </span><span class="c1">#Instrumental background</span>
+<span class="w">        </span><span class="nt">foreground</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">         </span><span class="c1">#Astrophysical foregrounds</span>
+
+
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Output</span>
+<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="nt">output</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/outputs/</span><span class="w"> </span><span class="c1">#Directory for all output files   =</span>
+<span class="w">        </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rafiki_I</span><span class="w">             </span><span class="c1">#Output file preflix</span>
+<span class="w">                                                                </span><span class="c1">#Files saved as &lt;label&gt;_szdat.hdf5 and/or &lt;label&gt;_xraydat.hdf5</span>
+</pre></div>
+</div>
+<section id="simulation-selection">
+<h3>Simulation Selection<a class="headerlink" href="#simulation-selection" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">package_data</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/Volumes/easystore/RAFIKI_CGM_mock_library/</span>
+<span class="w">        </span><span class="nt">sim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RAFIKI_A</span>
+</pre></div>
+</div>
+<p>This section points to where the maps and galaxy catalogs are saved and allows you to select the simulation you would like to analyze</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">package_data.path</span></code></dt><dd><p><em>str</em> - Path to the directory where RAFIKI-CGM maps and catalogs are saved. (CLOUD ACCESS INFO EVENTUALLY?)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">package_data.sim</span></code></dt><dd><p><em>str</em> - Name of the simulation you want to use to generate the mock data. Either <code class="docutils literal notranslate"><span class="pre">SIMBA</span></code>, <code class="docutils literal notranslate"><span class="pre">EAGLE</span></code>, or <code class="docutils literal notranslate"><span class="pre">RAFIKI_A-I</span></code>. See <a class="reference internal" href="overview/simulations.html#sim-options"><span class="std std-ref">Simulations</span></a> to understand the differences</p>
+</dd>
+</dl>
+</section>
+<section id="analysis-selection">
+<h3>Analysis Selection<a class="headerlink" href="#analysis-selection" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">sz_radial_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1">#Stacked Compton-y radial profile</span>
+<span class="w">        </span><span class="nt">sz_moment_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">          </span><span class="c1">#Stacked m=1/m=0 and m=2/m=0 moment profiles</span>
+<span class="w">        </span><span class="nt">thermal_energy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">           </span><span class="c1">#Thermal energy scaling relations</span>
+<span class="w">        </span><span class="nt">sz_stacked_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">          </span><span class="c1">#Stacked map of Compton-y parameter</span>
+<span class="w">        </span><span class="nt">xray_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">             </span><span class="c1">#Stacked X-ray surface brightnes profiles</span>
+<span class="w">        </span><span class="nt">xray_stacked_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1">#Stacked image of X-ray photon counts</span>
+</pre></div>
+</div>
+<p>This section is where you select which analyses you would like to do. There are three options related to the thermal Sunyaev-Zeldovich effect and two for X-ray emission.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">analysis.sz_radial_profiles</span></code></dt><dd><p><em>bool</em> - Generate a stacked radial profile of the Compton-y parameter</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">analysis.sz_moment_profiles</span></code></dt><dd><p><em>bool</em> - Generate stacked radial profiels for the moments of symmetry, output as the ratios of m1/m0 and m2/m0</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">analysis.thermal_energy</span></code></dt><dd><p><em>bool</em> - Calculate the thermal energy value within a circular region in your galaxy stack. Splits the sample into bins of stellar and halo mass that are specified in the config.sz.thermal_energy</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">analysis.sz_stacked_image</span></code></dt><dd><p><em>bool</em> - Save 2D array of stacked map of Compton-y parameter around galaxies</p>
+</dd>
+</dl>
+</section>
+<section id="galaxy-selection">
+<h3>Galaxy Selection<a class="headerlink" href="#galaxy-selection" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">selection</span><span class="p">:</span>
+<span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">matching</span><span class="w">              </span><span class="c1">#either &quot;ranges&quot;: specify limits on galaxy properties or &quot;matching&quot;: match user input galaxy catalog</span>
+<span class="nt">property_ranges</span><span class="p">:</span><span class="w">             </span><span class="c1">#Use these to set limits if method set to ranges</span>
+<span class="w">        </span><span class="nt">centrals_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">        </span><span class="c1">#Only select galaxies central in their halos</span>
+<span class="w">        </span><span class="nt">stellar_mass_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e11</span><span class="w">   </span><span class="c1"># Solar Masses</span>
+<span class="w">        </span><span class="nt">stellar_mass_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">        </span><span class="nt">halo_mass_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">        </span><span class="c1"># Solar Masses</span>
+<span class="w">        </span><span class="nt">halo_mass_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">        </span><span class="nt">ssfr_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">             </span><span class="c1"># Gyr^-1</span>
+<span class="w">        </span><span class="nt">ssfr_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="nt">catalog</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep_CEN.csv</span><span class="w"> </span><span class="c1">#File path for observational galaxy catalog</span>
+<span class="w">        </span><span class="nt">match_property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stellar_mass</span><span class="w">              </span><span class="c1">#Galaxy property you are trying to match-if mass make sure in log units</span>
+<span class="w">        </span><span class="nt">column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                                 </span><span class="c1">#Column index (i.e. 0 is the first column) of the property above in the observational catalog file</span>
+<span class="w">        </span><span class="nt">bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">10.5</span><span class="p p-Indicator">,</span><span class="nv">10.6</span><span class="p p-Indicator">,</span><span class="nv">10.7</span><span class="p p-Indicator">,</span><span class="nv">10.8</span><span class="p p-Indicator">,</span><span class="nv">10.9</span><span class="p p-Indicator">,</span><span class="nv">11</span><span class="p p-Indicator">,</span><span class="nv">11.1</span><span class="p p-Indicator">,</span><span class="nv">11.2</span><span class="p p-Indicator">,</span><span class="nv">11.3</span><span class="p p-Indicator">,</span><span class="nv">11.4</span><span class="p p-Indicator">,</span><span class="nv">11.5</span><span class="p p-Indicator">,</span><span class="nv">11.6</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1">#Stellar mass bins for the histogram of galaxy sample selection</span>
+<span class="w">        </span><span class="nt">n_sample</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+</pre></div>
+</div>
+<p>Here you identify how you want to generate the mock galaxy catalog and input the relevant parameters. There are two ways of doing this, set by selection.method</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">selection.method</span></code></dt><dd><p><em>str</em> - Identify how you wish to choose the galaxy sample. There are two options: ranges or matching. The first allows you to place limits on galaxy properties (stellar mass, halo mass,
+and ssfr) to cut out your galaxy sample. The second allows you to input a catalog and select analog galaxies for your sample. If you select matching, it will still apply any cuts listed
+under selection.property_ranges, so be sure those are set to null if you do not want any further cuts. (See <a class="reference internal" href="overview/galaxy_selection.html#selection-methods"><span class="std std-ref">Galaxy Selection</span></a>  for detailed documentation). Each method has a range of associated
+parameters.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.property_ranges.centrals_only</span></code></dt><dd><p><em>bool</em> - Select whether you want to only sample galaxies that are central in their halos.
+Set to <code class="docutils literal notranslate"><span class="pre">false</span></code> if you want to include all galaxies (both satellites and centrals)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.property_ranges.stellar_mass_min</span></code></dt><dd><p><em>float</em> - Minimum stellar mass cut in solar masses
+Set to <code class="docutils literal notranslate"><span class="pre">null</span></code> to apply no lower limit</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.property_ranges.stellar_mass_max</span></code></dt><dd><p><em>float</em> - Maximum stellar mass cut in solar masses
+Set to <code class="docutils literal notranslate"><span class="pre">null</span></code> to apply no upper limit</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.property_ranges.halo_mass_min</span></code></dt><dd><p><em>float</em> - Minimum halo mass cut in solar masses
+Set to <code class="docutils literal notranslate"><span class="pre">null</span></code> to apply no lower limit</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.property_ranges.halo_mass_max</span></code></dt><dd><p><em>float</em> - Maximum halo mass cut in solar masses
+Set to <code class="docutils literal notranslate"><span class="pre">null</span></code> to apply no upper limit</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While tSZ analysis can be used for any galaxy in the box, X-ray :ref: <cite>event_files</cite> have only been generated for the 500 most massive galaxies in each simulation output. This corresponds
+to a minimum stellar mass of ~4.3x10^10, please be conscious of this when choosing ranges.</p>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">selection.property_ranges.ssfr_min</span></code></dt><dd><p><em>float</em> - Minimum specific star formation rate cut in Gyr^-1
+Set to <code class="docutils literal notranslate"><span class="pre">null</span></code> to apply no lower limit</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.property_ranges.ssfr_max</span></code></dt><dd><p><em>float</em> - Maximum specific star formation rate cut in Gyr^-1
+Set to <code class="docutils literal notranslate"><span class="pre">null</span></code> to apply no upper limit</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.catalog.path</span></code></dt><dd><p><em>str</em> - Path and file name for catalog containing the comparison galaxy sample information</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.catalog.match_property</span></code></dt><dd><p><em>str</em>  - The galaxy sample property you want to match in the catalog.
+Either <code class="docutils literal notranslate"><span class="pre">stellar_mass</span></code> or <code class="docutils literal notranslate"><span class="pre">halo_mass</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.catalog.bins</span></code></dt><dd><p><em>array</em> - Bin edges for histogram that will be used to match sample distributions.
+Units of log solar masses</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">selection.catalog.n_sample</span></code></dt><dd><p><em>float</em> - Number of galaxies in resampled selection</p>
+</dd>
+</dl>
+</section>
+<section id="sz-analysis-parameters">
+<h3>SZ Analysis Parameters<a class="headerlink" href="#sz-analysis-parameters" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sz</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">redshift</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                                </span><span class="c1">#0.1, 0.5, 1, or 2</span>
+<span class="w">        </span><span class="nt">pixel_size_arcsec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">       </span><span class="c1">#default 3 for pre-generated maps</span>
+<span class="w">        </span><span class="nt">stamp_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w">            </span><span class="c1">#width of square to cut around galaxies in arcminutes. Default 15</span>
+<span class="w">        </span><span class="nt">gaussian_std</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">            </span><span class="c1">#standard deviation of the Gaussian beam in units of arcminutes. Default 2</span>
+<span class="w">        </span><span class="nt">thermal_energy</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">aperture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">              </span><span class="c1">#radius of spherical aperture for calculating thermal energy in units of arcminutes. Default 1</span>
+<span class="w">                </span><span class="nt">stellar_mass_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">10.7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">10.9</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">14.0</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># log10 solar masses</span>
+<span class="w">                </span><span class="nt">halo_mass_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">12</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">16</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># log10 solar masses</span>
+</pre></div>
+</div>
+<p>Here you input the parameters that are relevant for conducting the SZ analysis</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">sz.redshift</span></code></dt><dd><p><em>float</em> - Redshift of the snapshot you wish to analyse. Options are 0.1, 0.5, 1, and 2.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sz.pixel_size_arcsec</span></code></dt><dd><p><em>float</em> - Pixel scale of the Compton-y map. If using built-in RAFIKI-CGM maps the default is 3 arcseconds and this will never need to be changed.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sz.stamp_width</span></code></dt><dd><p><em>float</em> - Width of the square region you want to cut around galaxies to generate stacked data in units of arcminutes. Default is 15.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sz.gaussian_std</span></code></dt><dd><p><em>float</em> - Standard deviation of the Gaussian beam you want to convolve your data with to align with observational data in units of arcminutes.
+For ACT use: XX.
+For SPT use: XX.
+For TolTEC use: XX.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sz.thermal_energy.aperture</span></code></dt><dd><p><em>float</em> - Radius of the circular aperture used to calculate thermal energy in units of arcminutes.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sz.thermal_energy.stellar_mass_bins</span></code></dt><dd><p><em>list of floats</em> - Bin edges for stacking by stellar mass in thermal energy calculations. Units of log solar masses</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sz.thermal_energy.halo_mass_bins</span></code></dt><dd><p><em>list of floats</em> - Bin edges for stacking by halo mass in thermal energy calculations. Units of log solar masses</p>
+</dd>
+</dl>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">xray</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">redshift</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">               </span><span class="c1">#Snapshot redshift (currently only 0.1 supported)</span>
+<span class="w">        </span><span class="nt">soxs_instrument</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">erosita</span><span class="w">    </span><span class="c1">#Options: erosita | &lt;any SOXS instrument label&gt;</span>
+<span class="w">        </span><span class="nt">exposure_time_ks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w">      </span><span class="c1">#Exposure time (ks)</span>
+<span class="w">        </span><span class="nt">emin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                   </span><span class="c1">#Minimum energy (keV)</span>
+<span class="w">        </span><span class="nt">emax</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">                     </span><span class="c1">#Maximum energy (keV)</span>
+<span class="w">        </span><span class="nt">radial_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">10</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">30</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">50</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">75</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">100</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">200</span><span class="p p-Indicator">,</span>
+<span class="w">                                        </span><span class="nv">300</span><span class="p p-Indicator">,</span><span class="nv">400</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">500</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">600</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">700</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">800</span><span class="p p-Indicator">,</span>
+<span class="w">                                        </span><span class="nv">900</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1000</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1100</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1200</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1300</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1400</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1500</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1">#Radial bin edges (kpc)</span>
+<span class="w">        </span><span class="c1">#Background components for instrument simulation</span>
+<span class="w">        </span><span class="nt">ptsrc_bkgnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">        </span><span class="c1">#Point source background</span>
+<span class="w">        </span><span class="nt">instr_bkgnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">        </span><span class="c1">#Instrumental background</span>
+<span class="w">        </span><span class="nt">foreground</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">         </span><span class="c1">#Astrophysical foregrounds</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">xray.redshift</span></code></dt><dd><p><em>float</em> - Redshift of the snapshot you wish to analyse. Currently only supported for z=0.1.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">xray.sox_instrument</span></code></dt><dd><p><em>str</em> - Name of the instrument wanted for mock data.
+Can use any SOXS supported instrument or <code class="docutils literal notranslate"><span class="pre">erosita</span></code> for the eROSITA-SRG instrument</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">xray.exposure_time_ks</span></code></dt><dd><p><em>float</em> - Exposure time for the mock observation in units of kiloseconds. Must be less than 2000</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">xray.emin</span></code></dt><dd><p><em>float</em> - Minimum photon energy wanted to model in units of keV</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">xray.emax</span></code></dt><dd><p><em>float</em> - Maximum photon energy wanted to model in units of keV</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">xray.radial_bins</span></code></dt><dd><p><em>array</em> - Radial bin edges for generating surface brightness profile in units of kpc</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">xray.ptsrc_bkgnd</span></code></dt><dd><p><em>bool</em> - Include X-ray point source background in SOXS modelling</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">xray.instr_bkgnd</span></code></dt><dd><p><em>bool</em> - Include instrument background in SOXS modelling</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">xray.foreground</span></code></dt><dd><p><em>bool</em> - Include astrophysical foregrounds in SOXS modelling</p>
+</dd>
+</dl>
+</section>
+<section id="outputs">
+<h3>Outputs<a class="headerlink" href="#outputs" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output</span>
+<span class="nt">output</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/outputs/</span><span class="w">      </span><span class="c1">#directory where output files will be saved</span>
+<span class="w">        </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rafiki_A_z1</span><span class="w">          </span><span class="c1">#label for the output files, will be saved as &lt;label&gt;_szdat.hdf5 and/or &lt;label&gt;_xraydat.hdf5</span>
+</pre></div>
+</div>
+<p>Here you set the output directory and how you would like the data to be labeled. For more detail on the format of the output files see <a class="reference internal" href="outputs.html#output-structure"><span class="std std-ref">SZ Data Products</span></a></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">output.directory</span></code></dt><dd><p><em>str</em> - Path to the directory where you would like to save files. Be sure the directory exits, use absolute path</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">output.label</span></code></dt><dd><p><em>str</em> - Label used for the output files. If conducting tSZ analysis the file will be saved as &lt;label&gt;_szdat.hdf5 and for x-ray data will be &lt;label&gt;_xraydat.hdf5</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="visualizing-data">
+<h2>Visualizing Data<a class="headerlink" href="#visualizing-data" title="Permalink to this heading">¶</a></h2>
+<p>See <a class="reference internal" href="cookbook/szcookbook.html#plotting"><span class="std std-ref">Loading and Plotting Your Results</span></a> for examples on how to read in the output files and visualize the results.</p>
+</section>
+<section id="tips-and-common-issues">
+<h2>Tips and Common Issues<a class="headerlink" href="#tips-and-common-issues" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt><strong>The pipeline runs but output files are empty</strong></dt><dd><p>Make sure <code class="docutils literal notranslate"><span class="pre">output.label</span></code> and <code class="docutils literal notranslate"><span class="pre">output.directory</span></code> are set correctly in your config and that the output directory exists before running.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/images/logo.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">RAFIKI-CGM</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Mock data of the hot CGM in cosmological simulations</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=yourusername&repo=rafiki-cgm&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview/index.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Running RAFIKI-CGM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-file">Configuration File</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-selection">Simulation Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#analysis-selection">Analysis Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#galaxy-selection">Galaxy Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sz-analysis-parameters">SZ Analysis Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#outputs">Outputs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-data">Visualizing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tips-and-common-issues">Tips and Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generatingdata.html">Generating Your Own Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Code Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="overview/galaxy_selection.html" title="previous chapter">Galaxy Selection</a></li>
+      <li>Next: <a href="outputs.html" title="next chapter">Outputs</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Skylar Grayson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/running.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

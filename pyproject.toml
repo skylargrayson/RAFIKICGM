@@ -1,0 +1,10 @@
+[project]
+name = "rafiki-cgm"
+version = "0.1.0"
+dependencies = [
+    "numpy",
+    "pandas",
+    "astropy",
+    "pyyaml",
+    "scipy",
+]

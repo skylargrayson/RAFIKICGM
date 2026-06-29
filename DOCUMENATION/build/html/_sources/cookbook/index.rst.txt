@@ -1,0 +1,9 @@
+Cookbooks
+==================
+
+.. toctree::
+   :maxdepth: 1
+
+   szcookbook
+   xraycookbook
+   galaxycookbook

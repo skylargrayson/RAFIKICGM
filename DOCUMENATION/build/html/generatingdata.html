@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Generating Your Own Maps &#8212; RAFIKI-CGM 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code Reference" href="reference.html" />
+    <link rel="prev" title="Exploring Your Galaxy Sample" href="cookbook/galaxycookbook.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="generating-your-own-maps">
+<h1>Generating Your Own Maps<a class="headerlink" href="#generating-your-own-maps" title="Permalink to this heading">¶</a></h1>
+<p>RAFIKI-CGM automatically includes the necessary data products for 9 RAFIKI simulations, SIMBA, EAGLE, and EAGLE-AGNdT9. However, the package
+does include pipelines needed for generating your own data products from other simulations. In its current form, these are limited to SIMBA and EAGLE runs.</p>
+<section id="tsz">
+<h2>tSZ<a class="headerlink" href="#tsz" title="Permalink to this heading">¶</a></h2>
+<p>You can use RAFIKI-CGM to create a map of the Compton-y parameter projected along a snapshot box. This converts the particle data to a two-dimensional pixelated map of the Compton-y parameter, defined as <span class="math notranslate nohighlight">\(y = \sigma_T \int dl \ n_e \frac{k(T_e-T_{CMB})}{m_e c^2}\)</span>
+This is done via the generating_sz_data function and a full routine can be found in making_sz_maps.py. Here we briefly explain the inputs</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;snap_m50n512_105.hdf5&#39;</span>
+<span class="n">output_name</span> <span class="o">=</span> <span class="s1">&#39;SIMBA_z1&#39;</span>
+<span class="n">z</span> <span class="o">=</span> <span class="mf">0.9927</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>filename</strong> - Path and name of snapshot for analysis. Must be .hdf5 format</p></li>
+<li><p><strong>output_name</strong> - Name of the .npy file containing the projected Compton-y map. The full script will project along the x, y, and z directions, and save files as output_name+’_x/y/z_szy.npy’</p></li>
+<li><p><strong>z</strong> - redshift corresponding to the snapshot. Deriving the Compton-y parameter from pressure fields as done here is redshift dependent.</p></li>
+<li><p><strong>theta</strong> - Angular resolution you want your map to have in units of arcseconds. Default and the value used to generate the RAFIKI-CGM package maps is 3”.</p></li>
+</ul>
+</section>
+<section id="x-ray">
+<h2>X-ray<a class="headerlink" href="#x-ray" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/images/logo.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">RAFIKI-CGM</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Mock data of the hot CGM in cosmological simulations</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=yourusername&repo=rafiki-cgm&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Running RAFIKI-CGM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbooks</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Generating Your Own Maps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tsz">tSZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#x-ray">X-ray</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Code Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="cookbook/galaxycookbook.html" title="previous chapter">Exploring Your Galaxy Sample</a></li>
+      <li>Next: <a href="reference.html" title="next chapter">Code Reference</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Skylar Grayson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/generatingdata.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

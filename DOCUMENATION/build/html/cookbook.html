@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Cookbook &#8212; RAFIKI-CGM 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generating Your Own Maps" href="generatingdata.html" />
+    <link rel="prev" title="Outputs" href="outputs.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="cookbook">
+<h1>Cookbook<a class="headerlink" href="#cookbook" title="Permalink to this heading">¶</a></h1>
+<p>This cookbok walks through a basic end-to-end run of RAFIKI-CGM’s tSZ functionality.</p>
+<section id="setting-up-the-config-file">
+<h2>Setting up the Config File<a class="headerlink" href="#setting-up-the-config-file" title="Permalink to this heading">¶</a></h2>
+<p>Copy the example config file into your directory.</p>
+<blockquote>
+<div><p>cp config_example.yaml config.yaml</p>
+</div></blockquote>
+<p>Set the path to where the RAFIKI-CGM data is saved and select the simulation</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">package_data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/your/data/</span>
+<span class="w">  </span><span class="nt">sim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RAFIKI_A</span>
+</pre></div>
+</div>
+<p>Choose all three tSZ analyses:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">radial_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">moment_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">thermal_energy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">xray</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+<p>Select your galaxy sample using property ranges. In this example we select massive galaxies with a stellar mass greater than 1e11, and no limits on halo mass or star formation rate.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">selection</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ranges</span>
+<span class="w">        </span><span class="nt">property_ranges</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">stellar_mass_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e11</span>
+<span class="w">                </span><span class="nt">stellar_mass_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">                </span><span class="nt">halo_mass_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">                </span><span class="nt">halo_mass_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">                </span><span class="nt">ssfr_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">                </span><span class="nt">ssfr_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+</pre></div>
+</div>
+<p>Select your SZ analysis parameters. In this situation we are using the z=1 snapshot, with a beam standard deviation of 2 arcminutes. For thermal energy calculations we are summing within
+one arcminute and stacking galaxies with the halo and stellar mass bins shown below.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sz</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">redshift</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">pixel_size_arcsec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">        </span><span class="nt">stamp_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">        </span><span class="nt">gaussian_std</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">        </span><span class="nt">thermal_energy</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">aperture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">                </span><span class="nt">stellar_mass_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">10.7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">10.9</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">11.7</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">14.0</span><span class="p p-Indicator">]</span>
+<span class="w">                </span><span class="nt">halo_mass_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">12</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">12.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.6</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">13.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">16</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>Point to where you want the data to save</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output</span>
+<span class="nt">output</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./results/</span>
+<span class="w">        </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rafiki_A_z1</span>
+</pre></div>
+</div>
+</section>
+<section id="running-the-pipeline">
+<h2>Running the Pipeline<a class="headerlink" href="#running-the-pipeline" title="Permalink to this heading">¶</a></h2>
+<p>Run the pipeline from the command line</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>run_pipeline.py<span class="w"> </span>--config<span class="w"> </span>config.yaml
+</pre></div>
+</div>
+<p>You should see output like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Number of selected analog galaxies: 333
+Beginnning radial profile analysis...
+Completed radial profile analysis.
+Beginnning moment profile analysis...
+Completed moment profile analysis.
+Beginning thermal energy analysis...
+Completed thermal energy analysis.
+Finished.
+</pre></div>
+</div>
+<p>Remember that the number of selected galaxies is equal to three times the actual number in the simulation box as it accounts for the three different projections.</p>
+</section>
+<section id="loading-and-plotting-your-results">
+<span id="plotting"></span><h2>Loading and Plotting Your Results<a class="headerlink" href="#loading-and-plotting-your-results" title="Permalink to this heading">¶</a></h2>
+<p>Once the pipeline has finished running you can load the output files and plot the radial profiles, moment radial profiles, and thermal energy scaling relations as below</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+
+<span class="n">data_file</span> <span class="o">=</span> <span class="s1">&#39;results/rafiki_A_z1_szdat.hdf5&#39;</span> <span class="c1">#path to saved stacked radial data-should be the only thing you need to change</span>
+
+<span class="c1">#-------------RADIAL PROFILES-------------#</span>
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">x_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;radial_profile/radius&#39;</span><span class="p">][:]</span>
+    <span class="n">y_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;radial_profile/compton-y&#39;</span><span class="p">][:]</span>
+    <span class="n">err_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;radial_profile/error&#39;</span><span class="p">][:]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span><span class="n">y_a</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span><span class="n">y_a</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_a</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Radius (arcmin)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Compton-y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/radialprof.png"><img alt="_images/radialprof.png" src="_images/radialprof.png" style="width: 70%;" /></a>
+</figure>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#-------------MOMENT PROFILES-------------#</span>
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">x_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;moment_profiles/radius&#39;</span><span class="p">][:]</span>
+    <span class="n">y_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;moment_profiles/moment_1&#39;</span><span class="p">][:]</span>
+    <span class="n">err_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;moment_profiles/m1_error&#39;</span><span class="p">][:]</span>
+    <span class="n">y_b</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;moment_profiles/moment_2&#39;</span><span class="p">][:]</span>
+    <span class="n">err_b</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;moment_profiles/m2_error&#39;</span><span class="p">][:]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span> <span class="n">y_a</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;m=1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span> <span class="n">y_a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">300</span><span class="p">],</span><span class="n">yerr</span> <span class="o">=</span> <span class="n">err_a</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">fmt</span> <span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span> <span class="n">y_b</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">300</span><span class="p">],</span><span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;m=2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span> <span class="n">y_b</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">300</span><span class="p">],</span><span class="n">yerr</span> <span class="o">=</span> <span class="n">err_b</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">fmt</span> <span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Radius (arcmin)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$\Sigma(m)/\Sigma(m=0$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/momentprof.png"><img alt="_images/momentprof.png" src="_images/momentprof.png" style="width: 70%;" /></a>
+</figure>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#-------------STELLAR MASS-THERMAL ENERGY-------------#</span>
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">x_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;thermal_energy/stellar_mass&#39;</span><span class="p">][:]</span>
+    <span class="n">y_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;thermal_energy/thermal_stellar&#39;</span><span class="p">][:]</span>
+    <span class="n">err_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;thermal_energy/thermal_stellar_error&#39;</span><span class="p">][:]</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_a</span> <span class="p">,</span><span class="n">y_a</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span><span class="n">y_a</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_a</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Stellar Mass ($M_\odot$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Thermal Energy ($10^</span><span class="si">{60}</span><span class="s1">$ erg)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/thermstell.png"><img alt="_images/thermstell.png" src="_images/thermstell.png" style="width: 70%;" /></a>
+</figure>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#-------------HALO MASS-THERMAL ENERGY-------------#</span>
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">x_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;thermal_energy/halo_mass&#39;</span><span class="p">][:]</span>
+    <span class="n">y_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;thermal_energy/thermal_halo&#39;</span><span class="p">][:]</span>
+    <span class="n">err_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;thermal_energy/thermal_halo_error&#39;</span><span class="p">][:]</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_a</span> <span class="p">,</span><span class="n">y_a</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span><span class="n">y_a</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_a</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Halo Mass ($M_\odot$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Thermal Energy ($10^</span><span class="si">{60}</span><span class="s1">$ erg)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/thermhalo.png"><img alt="_images/thermhalo.png" src="_images/thermhalo.png" style="width: 70%;" /></a>
+</figure>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/images/logo.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">RAFIKI-CGM</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Mock data of the hot CGM in cosmological simulations</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=yourusername&repo=rafiki-cgm&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Running RAFIKI-CGM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Cookbook</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-the-config-file">Setting up the Config File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-pipeline">Running the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-and-plotting-your-results">Loading and Plotting Your Results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generatingdata.html">Generating Your Own Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Code Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="outputs.html" title="previous chapter">Outputs</a></li>
+      <li>Next: <a href="generatingdata.html" title="next chapter">Generating Your Own Maps</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Skylar Grayson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/cookbook.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

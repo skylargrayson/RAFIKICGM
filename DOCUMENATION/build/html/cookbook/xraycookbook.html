@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Running and Plotting X-ray Data &#8212; RAFIKI-CGM 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exploring Your Galaxy Sample" href="galaxycookbook.html" />
+    <link rel="prev" title="Running and Plotting Thermal Sunyaev Zel’dovich Data" href="szcookbook.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="running-and-plotting-x-ray-data">
+<h1>Running and Plotting X-ray Data<a class="headerlink" href="#running-and-plotting-x-ray-data" title="Permalink to this heading">¶</a></h1>
+<p>This cookbok walks through a basic end-to-end run of RAFIKI-CGM’s X-ray functionality.</p>
+<section id="setting-up-the-config-file">
+<h2>Setting up the Config File<a class="headerlink" href="#setting-up-the-config-file" title="Permalink to this heading">¶</a></h2>
+<p>Copy the example config file into your directory.</p>
+<blockquote>
+<div><p>cp config_example.yaml config.yaml</p>
+</div></blockquote>
+<p>Set the path to where the RAFIKI-CGM data is saved and select the simulation</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">package_data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/your/data/</span>
+<span class="w">  </span><span class="nt">sim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RAFIKI_A</span>
+</pre></div>
+</div>
+<p>Choose X-ray analyses:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">sz_radial_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">sz_moment_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">thermal_energy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">sz_stacked_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">xray_profiles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">xray_stacked_image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>Select your galaxy sample. In this example we are matching a catalog of galaxies used in eROSITA analyses, with an
+additional cut of minimum solar mass. We resample the simulated galaxies 200 times to match the observed distribution
+(see <span class="xref std std-doc">cookbook/galaxycookbook</span> to explore what this sample looks like)</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">selection</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">matching</span><span class="w">             </span><span class="c1">#Options: ranges | matching</span>
+<span class="c1">#Applied in both methods as an initial cut:</span>
+<span class="nt">property_ranges</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">centrals_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">           </span><span class="c1">#Restrict to central galaxies only</span>
+<span class="w">    </span><span class="nt">stellar_mass_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6e10</span><span class="w">       </span><span class="c1"># Solar Masses (null=no cut)</span>
+<span class="w">    </span><span class="nt">stellar_mass_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">    </span><span class="nt">halo_mass_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">           </span><span class="c1"># Solar Massess</span>
+<span class="w">    </span><span class="nt">halo_mass_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">    </span><span class="nt">ssfr_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">                </span><span class="c1"># Gyr^-1</span>
+<span class="w">    </span><span class="nt">ssfr_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="c1">#Used only in method: matching</span>
+<span class="nt">catalog</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep_CEN.csv</span><span class="w">            </span><span class="c1">#Comparison catalog</span>
+<span class="w">    </span><span class="nt">match_property</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stellar_mass</span><span class="w">  </span><span class="c1">#Options: stellar_mass | halo_mass</span>
+<span class="w">    </span><span class="nt">column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                     </span><span class="c1">#Column index of match_property in catalog</span>
+<span class="w">    </span><span class="nt">bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">10.7</span><span class="p p-Indicator">,</span><span class="nv">10.8</span><span class="p p-Indicator">,</span><span class="nv">10.9</span><span class="p p-Indicator">,</span><span class="nv">11</span><span class="p p-Indicator">,</span>
+<span class="w">        </span><span class="nv">11.1</span><span class="p p-Indicator">,</span><span class="nv">11.2</span><span class="p p-Indicator">,</span><span class="nv">11.3</span><span class="p p-Indicator">,</span><span class="nv">11.4</span><span class="p p-Indicator">,</span><span class="nv">11.5</span><span class="p p-Indicator">,</span><span class="nv">11.6</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1">#log10 solar masses</span>
+<span class="w">    </span><span class="nt">n_sample</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">400</span>
+</pre></div>
+</div>
+<p>Select your X-ray analysis parameters. Here we are wanting to generate mock eROSITA images, with an exposure time of 1000ks.
+Our stacked image will contain counts for photons between 0.5 and 2 keV, and we include no backgrounds or foregrounds.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">xray</span><span class="p">:</span>
+<span class="nt">redshift</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">               </span><span class="c1">#Snapshot redshift (currently only 0.1 supported)</span>
+<span class="nt">soxs_instrument</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">erosita</span><span class="w">    </span><span class="c1">#Options: erosita | &lt;any SOXS instrument label&gt;</span>
+<span class="nt">exposure_time_ks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w">      </span><span class="c1">#Exposure time (ks)</span>
+<span class="nt">emin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                   </span><span class="c1">#Minimum energy (keV)</span>
+<span class="nt">emax</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">                     </span><span class="c1">#Maximum energy (keV)</span>
+<span class="nt">radial_bins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">10</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">30</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">50</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">75</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">100</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">200</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="nv">300</span><span class="p p-Indicator">,</span><span class="nv">400</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">500</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">600</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">700</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">800</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="nv">900</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1000</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1100</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1200</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1300</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1400</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1500</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1">#Radial bin edges (kpc)</span>
+<span class="c1">#Background components for instrument simulation</span>
+<span class="nt">ptsrc_bkgnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">        </span><span class="c1">#Point source background</span>
+<span class="nt">instr_bkgnd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">        </span><span class="c1">#Instrumental background</span>
+<span class="nt">foreground</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">         </span><span class="c1">#Astrophysical foregrounds</span>
+</pre></div>
+</div>
+<p>Point to where you want the data to save</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output</span>
+<span class="nt">output</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./results/</span>
+<span class="w">        </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rafiki_A_example</span>
+</pre></div>
+</div>
+</section>
+<section id="running-the-pipeline">
+<h2>Running the Pipeline<a class="headerlink" href="#running-the-pipeline" title="Permalink to this heading">¶</a></h2>
+<p>Run the pipeline from the command line</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>run_pipeline.py<span class="w"> </span>--config<span class="w"> </span>config.yaml
+</pre></div>
+</div>
+<p>While running you will see a series of SOXS outputs like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Number of selected analog galaxies: 333
+soxs : [INFO     ] 2026-03-18 11:39:32,765 Detected 1462 events in total.
+soxs : [INFO     ] 2026-03-18 11:39:32,765 No backgrounds will be added to this observation.
+soxs : [INFO     ] 2026-03-18 11:39:32,769 Observation complete.
+soxs : [INFO     ] 2026-03-18 11:39:32,769 Writing events to file /Users/skylargrayson/Dropbox (ASU)/RAFIKI-CGM/Full Cleaned Pipeline/rafiki_cgm_PACKAGE/testing/RAFIKI_A_example_gal_sample_z_37_ma3.fits.
+soxs : [INFO     ] 2026-03-18 11:39:32,843 Simulating events from 1 sources using instrument erosita4 for 1000 ks.
+soxs : [INFO     ] 2026-03-18 11:39:32,955 Scattering energies with RMF sixte_erormf_normalized_singles_20170725.rmf.
+Scattering energies : 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1495/1495 [00:00&lt;00:00, 90562.90it/s]
+soxs : [INFO     ] 2026-03-18 11:39:32,973 Detected 1495 events in total.
+soxs : [INFO     ] 2026-03-18 11:39:32,973 No backgrounds will be added to this observation.
+soxs : [INFO     ] 2026-03-18 11:39:32,977 Observation complete.
+soxs : [INFO     ] 2026-03-18 11:39:32,977 Writing events to file /Users/skylargrayson/Dropbox (ASU)/RAFIKI-CGM/Full Cleaned Pipeline/rafiki_cgm_PACKAGE/testing/RAFIKI_A_example_gal_sample_z_37_ma4.fits.
+soxs : [INFO     ] 2026-03-18 11:39:33,051 Simulating events from 1 sources using instrument erosita5 for 1000 ks.
+soxs : [INFO     ] 2026-03-18 11:39:33,159 Scattering energies with RMF sixte_erormf_normalized_singles_20170725.rmf.
+</pre></div>
+</div>
+<p>Remember that the number of selected galaxies is equal to three times the actual number in the simulation box as it accounts for the three different projections.</p>
+</section>
+<section id="loading-and-plotting-your-results">
+<h2>Loading and Plotting Your Results<a class="headerlink" href="#loading-and-plotting-your-results" title="Permalink to this heading">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The matching approach to galaxy sample selection includes random selection during the resampling process, so your results may be slightly different than the example shown here.</p>
+</div>
+<p>Once the pipeline has finished running you can load the output files and plot the radial profiles and stacked image as below</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+
+<span class="n">data_file</span> <span class="o">=</span> <span class="s1">&#39;results/rafiki_A_example_xraydat.hdf5&#39;</span> <span class="c1">#path to saved stacked radial data-should be the only thing you need to change</span>
+
+<span class="c1">#-------------RADIAL PROFILES-------------#</span>
+<span class="c1">#-------------RADIAL PROFILES-------------#</span>
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">x_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;radial_profile/radius&#39;</span><span class="p">][:]</span>
+    <span class="n">y_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;radial_profile/Sx&#39;</span><span class="p">][:]</span>
+    <span class="n">err_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;radial_profile/error&#39;</span><span class="p">][:]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span><span class="n">y_a</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x_a</span><span class="p">,</span><span class="n">y_a</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">err_a</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Radius (arcmin)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Sx&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/xrayprofile.png"><img alt="../_images/xrayprofile.png" src="../_images/xrayprofile.png" style="width: 70%;" /></a>
+</figure>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#-------------STACKED IMAGE-------------#</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1.anchored_artists</span> <span class="kn">import</span> <span class="n">AnchoredSizeBar</span>
+
+<span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">y_a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;image/image_dat&#39;</span><span class="p">][:]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">y_a</span><span class="p">[</span><span class="n">y_a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-1</span> <span class="c1">#To allow log plotting</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">y_a</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y_a</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Counts&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">384</span><span class="o">-</span><span class="mi">384</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span><span class="mi">384</span><span class="o">+</span><span class="mi">384</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="c1">#Properly center the FOV</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">384</span><span class="o">-</span><span class="mi">384</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span><span class="mi">384</span><span class="o">+</span><span class="mi">384</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span>
+
+<span class="n">scalebar</span> <span class="o">=</span> <span class="n">AnchoredSizeBar</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">transData</span><span class="p">,</span>
+                        <span class="mf">54.38</span><span class="p">,</span> <span class="s1">&#39;1 Mpc&#39;</span><span class="p">,</span> <span class="s1">&#39;upper left&#39;</span><span class="p">,</span>
+                        <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+                        <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">size_vertical</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">scalebar</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>  <span class="c1"># Remove x ticks</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>  <span class="c1"># Remove y ticks</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>   <span class="c1"># Remove x label</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/xraystack.png"><img alt="../_images/xraystack.png" src="../_images/xraystack.png" style="width: 70%;" /></a>
+</figure>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/images/logo.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">RAFIKI-CGM</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Mock data of the hot CGM in cosmological simulations</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=yourusername&repo=rafiki-cgm&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">Running RAFIKI-CGM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../outputs.html">Outputs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Cookbooks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="szcookbook.html">Running and Plotting Thermal Sunyaev Zel’dovich Data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Running and Plotting X-ray Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-the-config-file">Setting up the Config File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-pipeline">Running the Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loading-and-plotting-your-results">Loading and Plotting Your Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="galaxycookbook.html">Exploring Your Galaxy Sample</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../generatingdata.html">Generating Your Own Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Code Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Cookbooks</a><ul>
+      <li>Previous: <a href="szcookbook.html" title="previous chapter">Running and Plotting Thermal Sunyaev Zel’dovich Data</a></li>
+      <li>Next: <a href="galaxycookbook.html" title="next chapter">Exploring Your Galaxy Sample</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Skylar Grayson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/cookbook/xraycookbook.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
