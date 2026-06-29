@@ -78,8 +78,8 @@ html_theme_options = {
     'logo': 'images/logo.png',
     'logo_name': True,
     'description': 'Mock data of the hot CGM in cosmological simulations',
-    'github_user': 'yourusername',
-    'github_repo': 'rafiki-cgm',
+    'github_user': 'skylargrayson',
+    'github_repo': 'RAFIKICGM',
     'github_button': True,
 }
 
