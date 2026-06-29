@@ -1,10 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "rafiki-cgm"
 version = "0.1.0"
-dependencies = [
-    "numpy",
-    "pandas",
-    "astropy",
-    "pyyaml",
-    "scipy",
+...
+
+[tool.setuptools]
+packages = ["rafiki"]
+
+[tool.setuptools.package-data]
+rafiki = [
+    "instrument_files/*.fits",
+    "instrument_files/*.xml",
 ]
