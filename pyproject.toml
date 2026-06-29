@@ -1,17 +1,119 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = [
+    "setuptools>=69",
+    "wheel",
+]
 build-backend = "setuptools.build_meta"
+
 
 [project]
 name = "rafiki-cgm"
 version = "0.1.0"
-...
+
+description = "RAFIKI-CGM."
+
+readme = "README.md"
+
+requires-python = ">=3.10"
+
+license = {file = "LICENSE"}
+
+authors = [
+    {name = "Skylar Grayson", email = "sigrayso@asu.edu"},
+]
+
+keywords = [
+    "astronomy",
+    "astrophysics",
+    "simulations",
+    "CGM",
+    "X-ray",
+    "Sunyaev-Zel'dovich",
+    "SIMBA",
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+
+    "Intended Audience :: Science/Research",
+
+    "License :: OSI Approved :: MIT License",
+
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+
+
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "astropy",
+    "yt",
+    "caesar",
+    "h5py",
+    "PyYAML",
+    "tqdm",
+    "pyXSIM",
+    "SOXS"
+]
+
+
+
+[project.urls]
+Homepage = "https://github.com/skylargrayson/RAFIKICGM"
+Documentation = "https://rafikicgm.readthedocs.io"
+Repository = "https://github.com/skylargrayson/RAFIKICGM"
+Issues = "https://github.com/skylargrayson/RAFIKICGM/issues"
+
+
+
+#
+# This creates the executable:
+#
+#    rafiki --config config.yaml
+#
+[project.scripts]
+rafiki = "rafiki.cli:main"
+
+
+
+#########################################################
+# setuptools configuration
+#########################################################
 
 [tool.setuptools]
-packages = ["rafiki"]
+
+package-dir = {"" = "src"}
+
+include-package-data = true
+
+
+
+[tool.setuptools.packages.find]
+
+where = ["src"]
+
+
+
+#########################################################
+# Include non-python files
+#########################################################
 
 [tool.setuptools.package-data]
+
 rafiki = [
-    "instrument_files/*.fits",
-    "instrument_files/*.xml",
+
+    "data/**/*",
+
+    "*.yaml",
+
+    "*.txt",
+
+    "*.csv",
+
 ]
