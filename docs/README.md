@@ -1,5 +1,6 @@
 RAFIKI
 ======
+📖 Documentation: https://rafikicgm.readthedocs.io/
 
 RAFIKI (Realizing AGN Feedback in Keyframe Images) is an open-source python package developed to analyze
 simulated microwave and X-ray data. In its current form, it can be used to generate and stack tSZ images
