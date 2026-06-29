@@ -1,17 +1,14 @@
-import matplotlib.pyplot as plt
-import matplotlib.colors as colors
-from matplotlib import gridspec
 import numpy as np
 from astropy.convolution import Gaussian2DKernel 
-from astropy.convolution import convolve, convolve_fft
+from astropy.convolution import convolve_fft
 from astropy.cosmology import FlatLambdaCDM
 import astropy.units as u
 import math
 from scipy.ndimage.interpolation import geometric_transform
 from scipy.stats import bootstrap
-from rafiki.catalog import load_catalog
 from scipy.stats import bootstrap
 import h5py
+from .catalog import load_catalog
 
 def determining_frb_size(box_size, z, comov, angular_res):
     '''

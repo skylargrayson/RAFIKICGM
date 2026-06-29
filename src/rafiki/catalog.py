@@ -1,8 +1,6 @@
 import pandas as pd
 import h5py 
 import numpy as np
-import matplotlib.pyplot as plt
-
 
 
 def load_catalog(config,redshift): 

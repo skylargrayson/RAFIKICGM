@@ -1,0 +1,11 @@
+numpy
+scipy
+matplotlib
+astropy
+yt
+caesar
+h5py
+PyYAML
+tqdm
+pyXSIM
+SOXS

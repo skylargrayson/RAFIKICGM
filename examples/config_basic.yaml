@@ -14,10 +14,10 @@ package_data:
 # -----------------------------------------------------------------------------
 # Set to true to enable each data product
 analysis:
-  sz_radial_profiles: true         #Stacked Compton-y radial profile
-  sz_moment_profiles: true        #Stacked m=1/m=0 and m=2/m=0 moment profiles
-  thermal_energy: true         #Thermal energy scaling relations
-  sz_stacked_image: true        #Stacked map of Compton-y parameter
+  sz_radial_profiles: false        #Stacked Compton-y radial profile
+  sz_moment_profiles: false        #Stacked m=1/m=0 and m=2/m=0 moment profiles
+  thermal_energy: false        #Thermal energy scaling relations
+  sz_stacked_image: false       #Stacked map of Compton-y parameter
   xray_profiles: true           #Stacked X-ray surface brightnes profiles
   xray_stacked_image: true   #Stacked image of X-ray photon counts
 
@@ -30,7 +30,7 @@ selection:
   #Applied in both methods as an initial cut:
   property_ranges:             
     centrals_only: true           #Restrict to central galaxies only
-    stellar_mass_min: 1e11       # Solar Masses (null=no cut)
+    stellar_mass_min: 5e11       # Solar Masses (null=no cut)
     stellar_mass_max: null
     halo_mass_min: 1e12           # Solar Massess
     halo_mass_max: 1e14      
@@ -90,6 +90,6 @@ xray:
 # Output
 # -----------------------------------------------------------------------------
 output:
-  directory: /Users/skylargrayson/Dropbox (ASU)/RAFIKI-CGM/Full Cleaned Pipeline/rafiki_cgm_PACKAGE/testing/ #Directory for all output files    
-  label: SIMBA_thermalenergy_dissertation  #Output file preflix 
+  directory: /Users/skylargrayson/Dropbox (ASU)/RAFIKI-CGM/Full Cleaned Pipeline/testing/ #Directory for all output files    
+  label: testing_new_structure  #Output file preflix 
                                  #Files saved as <label>_szdat.hdf5 and/or <label>_xraydat.hdf5 

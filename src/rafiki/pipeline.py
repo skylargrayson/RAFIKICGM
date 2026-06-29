@@ -1,13 +1,11 @@
-import pandas as pd
-import numpy as np
-from astropy.cosmology import FlatLambdaCDM
-import astropy.units as u
-from rafiki.catalog import load_catalog, select_by_ranges, select_by_matching
-from rafiki.sz import cut_stamps, make_radial_profiles, make_moment_profiles, thermal_energy,make_stacked_sz_image
-from astropy.io import fits
-from rafiki.xray import xray_instrument_simulation
 import os
-import glob
+import astropy.units as u
+from astropy.cosmology import FlatLambdaCDM
+from .catalog import  select_by_ranges, select_by_matching
+from .sz import cut_stamps, make_radial_profiles, make_moment_profiles, thermal_energy,make_stacked_sz_image
+from .xray import xray_instrument_simulation
+
+
 
 def run_sz(config):
     ''' 

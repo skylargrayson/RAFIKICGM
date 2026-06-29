@@ -1,21 +1,6 @@
-import yt
-import matplotlib.pyplot as plt
-import matplotlib.colors as colors
-from matplotlib import gridspec
+
 import numpy as np
-import caesar
-import pandas as pd
-import csv
-from astropy.io import fits
-from astropy.utils.data import get_pkg_data_filename
-from astropy.convolution import Gaussian2DKernel, interpolate_replace_nans
-from astropy.convolution import convolve, convolve_fft
-import scipy.ndimage
-from random import randint
-import math
-from scipy.ndimage.interpolation import geometric_transform
-#from Galaxy_data import *
-from scipy.stats import bootstrap
+
 
 
 def gen_random_indices(index_set, gen_size):

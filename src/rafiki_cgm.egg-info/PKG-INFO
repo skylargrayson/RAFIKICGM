@@ -1,0 +1,31 @@
+Metadata-Version: 2.4
+Name: rafiki-cgm
+Version: 0.1.0
+Summary: RAFIKI-CGM.
+Author-email: Skylar Grayson <sigrayso@asu.edu>
+Project-URL: Homepage, https://github.com/skylargrayson/RAFIKICGM
+Project-URL: Documentation, https://rafikicgm.readthedocs.io
+Project-URL: Repository, https://github.com/skylargrayson/RAFIKICGM
+Project-URL: Issues, https://github.com/skylargrayson/RAFIKICGM/issues
+Keywords: astronomy,astrophysics,simulations,CGM,X-ray,Sunyaev-Zel'dovich,SIMBA
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Astronomy
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: matplotlib
+Requires-Dist: astropy
+Requires-Dist: yt
+Requires-Dist: caesar
+Requires-Dist: h5py
+Requires-Dist: PyYAML
+Requires-Dist: tqdm
+Requires-Dist: pyXSIM
+Requires-Dist: SOXS

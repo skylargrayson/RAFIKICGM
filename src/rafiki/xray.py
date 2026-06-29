@@ -1,34 +1,19 @@
-import yt
-import matplotlib.pyplot as plt
-import matplotlib.colors as colors
-from matplotlib import gridspec
 import numpy as np
-import caesar
-import pandas as pd
-import csv
 from astropy.io import fits
-from astropy.utils.data import get_pkg_data_filename
-from astropy.convolution import Gaussian2DKernel, interpolate_replace_nans
-from astropy.convolution import convolve, convolve_fft
 from astropy.cosmology import FlatLambdaCDM
 import astropy.units as u
-import scipy.ndimage
 from random import randint
-import math
-from scipy.ndimage.interpolation import geometric_transform
-#from Galaxy_data import *
 from scipy.stats import bootstrap
-from rafiki.catalog import load_catalog
 from scipy.stats import bootstrap
 import h5py
 import soxs
-import pyxsim
 import os
-import json
-from itertools import chain
 import glob
-
-
+from importlib.resources import files
+from .catalog import load_catalog
+from .instruments import make_erosita
+import traceback
+from pathlib import Path
 def xray_instrument_simulation(config,index_sample, label):
     '''
     Run through the X-ray pipeline. Creates mock observations, generates radial profiles of surface brigtness and stacks. Also generates stacked images if analysis.xray_stacked_image: true
@@ -41,6 +26,7 @@ def xray_instrument_simulation(config,index_sample, label):
     :param label: File name and path to save outputs
     :type label: str
     '''
+
     instrument = str(config['xray']['soxs_instrument'])
     exp_time = float(config['xray']['exposure_time_ks'])
     output_dir = str(config['output']['directory'])
@@ -51,47 +37,28 @@ def xray_instrument_simulation(config,index_sample, label):
     make_image = config['analysis']['xray_stacked_image']
 
     #Create SOXS eROSITA instrument
-    instrument_dir = os.path.abspath('./erosita_instrument_files')
-    soxs.set_soxs_config("soxs_data_dir", instrument_dir)
-    rmf_file = os.path.abspath(os.path.join(instrument_dir,"sixte_erormf_normalized_singles_20170725.rmf"))
-    bkg_file = os.path.abspath(os.path.join(instrument_dir,"particle_bkg_eFEDS_V2_20210607.pha"))
-    for tm in range(1, 8):
-        name = f"erosita{tm}"
-        arf_file = os.path.abspath(os.path.join(instrument_dir,f"tm{tm}_arf_filter_000101v02.fits"))
-        psf_file = os.path.abspath(os.path.join(instrument_dir,f"tm{tm}_2dpsf_190219v05.fits"))
-        inst = {
-            "name": name,
-            "arf": arf_file,
-            "rmf": rmf_file,
-            "bkgnd": [bkg_file, 1.0],
-            "num_pixels": 384,
-            "fov": 61.8,
-            "aimpt_coords": [0.0, 0.0],
-            "chips": [["Box", 0, 0, 384, 384]],
-            "focal_length": 1.6,
-            "dither": False,
-            "psf": ["multi_image", psf_file],
-            "imaging": True,
-            "grating": False
-        }
-        if name not in soxs.instrument_registry:
-            soxs.add_instrument_to_registry(inst)
-
+    
     axes = ["x", "y", "z"]
     emin=float(config['xray']['emin']) 
     emax=float(config['xray']['emax']) 
     r_bins = np.array(config['xray']['radial_bins'])#creating the radial bins that will be used-this is from Zhang 2024c
-    arf_dat =fits.open("./erosita_instrument_files/onaxis_tm0_arf_filter_2023-01-17.fits")
+
+   
+    if instrument.startswith("erosita"):
+        instrument_dir = Path(__file__).parent / "data" / "erosita"
+        soxs.set_soxs_config("soxs_data_dir", str(instrument_dir))
+        make_erosita()
+        detectors= [f"erosita{i}" for i in range(1, 8)]
+        arf_dat=fits.open(instrument_dir / "onaxis_tm0_arf_filter_2023-01-17.fits")
+    else:
+        detectors = [instrument]
+        arf_dat=fits.open(soxs.instrument_registry[instrument]["arf"])
+
     ad=arf_dat[1].data
     arf_e=np.array(ad['ENERG_LO']) #energy in kev
     arf= ad['SPECRESP'] #effective area in cm^2
     texp=float(config['xray']['exposure_time_ks'])*1000
-    cosmo = FlatLambdaCDM(H0=67.74 * u.km / u.s / u.Mpc, Tcmb0=2.725 * u.K, Om0=0.3089)
-    redshift = float(config['xray']['redshift'])  
-    d_A = cosmo.angular_diameter_distance(redshift).to(u.kpc).value 
-    theta_rad = (9.65625 * u.arcsec).to(u.rad).value
-    dl = cosmo.luminosity_distance(redshift).value * 3.086*10**24 #convert to centimeters  	
-    pixel_size_kpc = d_A * theta_rad
+
     all_profs = []
     all_images =[]
 
@@ -111,20 +78,31 @@ def xray_instrument_simulation(config,index_sample, label):
             
             all_comb = []
             image_comb = []
-            for tm in range(1, 8):
-                print('Event file',event_file)
+            for detector in detectors:
+
+                inst = soxs.instrument_registry[detector]
+                cosmo = FlatLambdaCDM(H0=67.74 * u.km / u.s / u.Mpc, Tcmb0=2.725 * u.K, Om0=0.3089)
+                redshift = float(config['xray']['redshift'])  
+                d_A = cosmo.angular_diameter_distance(redshift).to(u.kpc).value 
+                pixel_scale_arcsec = inst["fov"] * 60.0 / inst["num_pixels"]
+                theta_rad = (pixel_scale_arcsec * u.arcsec).to(u.rad).value
+                dl = cosmo.luminosity_distance(redshift).to(u.cm).value
+                pixel_size_kpc = d_A * theta_rad
+
                 try:
 
                     outfile = os.path.join(
                         output_dir,
-                        f"{output_label}_gal_sample_{axis}_{gal_number}_ma{tm}.fits"
+                        f"{output_label}_gal_sample_{axis}_{gal_number}_{detector}.fits"
                     )
+                    from soxs.utils import soxs_cfg
 
+                    print(soxs_cfg.get("soxs", "soxs_data_dir"))
                     soxs.instrument_simulator(                      #Makes mock images
                             event_file,
                             outfile,
                             (exp_time, "ks"),
-                            f"erosita{tm}",
+                            detector,
                             [0, 0],
                             overwrite=True,
                             ptsrc_bkgnd=config['xray']['ptsrc_bkgnd'],
@@ -134,27 +112,29 @@ def xray_instrument_simulation(config,index_sample, label):
                     f = fits.open(outfile)
                     d = f[1].data
                     e_obs = convert_to_erg(np.array(d['ENERGY'])/1000, redshift, dl, emin, emax, arf, arf_e, texp)
-                    width = 384
+                    num_pixels = inst["num_pixels"]
+                    width = num_pixels 
                     r = np.sqrt((d['X'] - width)**2 + (d['Y'] - width)**2) * pixel_size_kpc
                     radial = bin_energies(r, e_obs, r_bins)
                     all_comb.append(radial)
                     f.close()
 
                     if make_image:
-                        soxs.write_image(outfile,  output_dir+output_label+f"_gal_image_sample_{axis}_{gal_number}_ma{tm}.fits", emin=emin, emax=emax, overwrite=True) 
-                        image_file = output_dir+output_label+f"_gal_image_sample_{axis}_{gal_number}_ma{tm}.fits"
+                        soxs.write_image(outfile,  output_dir+output_label+f"_gal_image_sample_{axis}_{gal_number}_{detector}.fits", emin=emin, emax=emax, overwrite=True) 
+                        image_file = output_dir+output_label+f"_gal_image_sample_{axis}_{gal_number}_{detector}.fits"
                         fi = fits.open(image_file)
                         di=fi[0].data
                         image_comb.append(di)
                     else:
-                        image_comb.append(np.full((768, 768), np.nan))
+                        image_comb.append(np.full((num_pixels, num_pixels), np.nan))
                 except Exception as e:
-                    print(f"⚠️ Skipping galaxy {i}, axis {axis}, instrument {tm}: {e}")
-                    failed_runs.append((i, axis, tm))
+                    num_pixels = inst["num_pixels"]            
+                    print(f"⚠️ Skipping galaxy {i}, axis {axis}, instrument {detector}: {e}")
+                    failed_runs.append((i, axis, detector))
 
                     # Append zeros so shapes stay consistent
                     all_comb.append(np.full(len(r_bins)-1, np.nan))
-                    image_comb.append(np.full((768,768), np.nan))
+                    image_comb.append(np.full((num_pixels, num_pixels), np.nan))
 
                     continue
                 

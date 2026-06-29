@@ -1,6 +1,6 @@
 import yaml
 import argparse
-from rafiki.pipeline import run_sz, run_xray 
+from .pipeline import run_sz, run_xray 
 
 def load_config(path):
     with open(path) as f:
