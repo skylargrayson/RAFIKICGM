@@ -64,6 +64,7 @@ xray:
   redshift: 0.1               #Snapshot redshift (currently only 0.1 supported)
   soxs_instrument: erosita    #Options: erosita | <any SOXS instrument label>
   exposure_time_ks: 1000      #Exposure time (ks)
+  collecting_area:  2100      #Collecting area of instrument (cm^2)
   emin: 0.5                   #Minimum energy (keV)
   emax: 2                     #Maximum energy (keV)
   radial_bins: [   0,   10,   20,   30,   40,   50,   60,   70,   80,   90,  100,
@@ -91,5 +92,5 @@ xray:
 # -----------------------------------------------------------------------------
 output:
   directory: /Users/skylargrayson/Dropbox (ASU)/RAFIKI-CGM/Full Cleaned Pipeline/testing/ #Directory for all output files    
-  label: testing_new_structure  #Output file preflix 
+  label: testing_new_xray #Output file preflix 
                                  #Files saved as <label>_szdat.hdf5 and/or <label>_xraydat.hdf5 

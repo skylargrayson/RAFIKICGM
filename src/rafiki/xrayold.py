@@ -13,7 +13,6 @@ import glob
 from importlib.resources import files
 from .catalog import load_catalog
 from .instruments import make_erosita
-from .utils import load_xray_particle_data
 import traceback
 from pathlib import Path
 def xray_instrument_simulation(config,index_sample, label):
@@ -35,15 +34,16 @@ def xray_instrument_simulation(config,index_sample, label):
     output_label = str(config['output']['label'])
     data_path = str(config['package_data']['path'])
     sim = str(config['package_data']['sim'])
-    xray_data_saved = data_path + sim + '/snap_z0_1/X-ray/particles/'
+    xray_data_saved = data_path + sim + '/snap_z0_1/X-ray/pyxsim/'
     make_image = config['analysis']['xray_stacked_image']
 
+    #Create SOXS eROSITA instrument
+    
     axes = ["x", "y", "z"]
     emin=float(config['xray']['emin']) 
     emax=float(config['xray']['emax']) 
-    area=float(config['xray']['collecting_area']) 
     r_bins = np.array(config['xray']['radial_bins'])#creating the radial bins that will be used-this is from Zhang 2024c
-    redshift = float(config['xray']['redshift'])  
+
    
     if instrument.startswith("erosita"):
         instrument_dir = Path(__file__).parent / "data" / "erosita"
@@ -68,31 +68,24 @@ def xray_instrument_simulation(config,index_sample, label):
         ids,stell, halo, rad, age, sfr, ssfr,frb_locs,centrals=load_catalog(config, str(redshift))
         index_to_id = {i: id_ for i, id_ in enumerate(ids)}
 
-    source_model = pyxsim.CIESourceModel("apec", emin, emax, 1000, Zmet =('gas', 'metallicity'), temperature_field = ('gas', 'temperature'),emission_measure_field=('gas','emission_measure'))
+    source_model = pyxsim.CIESourceModel("apec", 0.5, 2.0, 1000, Zmet =('gas', 'metallicity'), temperature_field = ('gas', 'temperature'),emission_measure_field=('gas','emission_measure'))
                    
     for i in index_sample:
         gal_number = str(i)
-        if sim=='EAGLE':
-            gal_id = str(index_to_id[i])
-            particles = load_xray_particle_data(xray_data_saved+f"galaxy_{gal_id}.h5")
-        else:
-            particles = load_xray_particle_data(xray_data_saved+f"galaxy_{gal_number}.h5")
-            
-        #Make photon and event lists
-        xray_fields = source_model.make_source_fields(particles, emin,emax)
-        ad = particles.all_data()       
-        n_photons, n_cells = pyxsim.make_photons( output_dir+output_label+f"_photons_{gal_number}", ad, redshift, area,exp_time*1.5*1000, source_model) #for generating photons, use longer exposure time than instrument simulation
-
         for axis in axes:
-            n_events = pyxsim.project_photons( output_dir+output_label+f"_photons_{gal_number}",  output_dir+output_label+f"_events_{gal_number}", axis, (0.0, 0.0))
-        os.remove(output_dir+output_label+f"_photons_{gal_number}.h5") #Don't need photon lists after this point 
-        for axis in axes:
+            if sim=='EAGLE':
+                 gal_id = str(index_to_id[i])
+                 event_file = xray_data_saved+f"gal_sample_{gal_id}_{axis}_events.h5"
+            else:
+                event_file = xray_data_saved+f"gal_sample_{i}_{axis}_events.h5"
+            xray_fields = source_model.make_source_fields(test, 0.5, 2.0)
             all_comb = []
             image_comb = []
             for detector in detectors:
+
                 inst = soxs.instrument_registry[detector]
                 cosmo = FlatLambdaCDM(H0=67.74 * u.km / u.s / u.Mpc, Tcmb0=2.725 * u.K, Om0=0.3089)
-
+                redshift = float(config['xray']['redshift'])  
                 d_A = cosmo.angular_diameter_distance(redshift).to(u.kpc).value 
                 pixel_scale_arcsec = inst["fov"] * 60.0 / inst["num_pixels"]
                 theta_rad = (pixel_scale_arcsec * u.arcsec).to(u.rad).value
@@ -105,7 +98,9 @@ def xray_instrument_simulation(config,index_sample, label):
                         output_dir,
                         f"{output_label}_gal_sample_{axis}_{gal_number}_{detector}.fits"
                     )
-                    event_file =  output_dir+output_label+f"_events_{gal_number}.h5"
+                    from soxs.utils import soxs_cfg
+
+                    print(soxs_cfg.get("soxs", "soxs_data_dir"))
                     soxs.instrument_simulator(                      #Makes mock images
                             event_file,
                             outfile,
@@ -153,8 +148,6 @@ def xray_instrument_simulation(config,index_sample, label):
             all_profs.append(summed_instruments)
 
             for fname in glob.glob(output_dir + output_label + "*.fits"):
-                os.remove(fname)
-            for fname in glob.glob(output_dir + output_label + "*.h5"):
                 os.remove(fname)
 
     print('Number of galaxies with no detections', len(failed_runs))

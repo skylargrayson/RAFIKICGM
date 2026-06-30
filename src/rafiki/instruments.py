@@ -10,13 +10,13 @@ import soxs
 import os
 import glob
 from .catalog import load_catalog
-from importlib.resources import files
+from pathlib import Path
 
 
 #USE TO BUILD AND REGISTER CUSTOM SOXS INSTRUMENTS IF DESIRED
 
 def make_erosita():
-    instrument_dir = files("rafiki.data.erosita")
+    instrument_dir = Path(__file__).parent / "data" / "erosita"
 
     soxs.set_soxs_config("soxs_data_dir", str(instrument_dir))
 

@@ -1,7 +1,7 @@
 
 import numpy as np
-
-
+import h5py
+import yt
 
 def gen_random_indices(index_set, gen_size):
     """
@@ -41,3 +41,69 @@ def single_catalog_bootstrap(data, boot_size, loop_size):
     return result
 
 
+def load_xray_particle_data(filename):
+    with h5py.File(filename) as f:
+
+        gas = f["data"]
+
+        data = {
+            ("gas","particle_position_x"):
+                (gas["particle_position_x"][:],
+                gas["particle_position_x"].attrs["units"]),
+
+            ("gas","particle_position_y"):
+                (gas["particle_position_y"][:],
+                gas["particle_position_y"].attrs["units"]),
+
+            ("gas","particle_position_z"):
+                (gas["particle_position_z"][:],
+                gas["particle_position_z"].attrs["units"]),
+
+            ("gas","particle_velocity_x"):
+                (gas["velocity_x"][:],
+                gas["velocity_x"].attrs["units"]),
+
+            ("gas","particle_velocity_y"):
+                (gas["velocity_y"][:],
+                gas["velocity_y"].attrs["units"]),
+
+            ("gas","particle_velocity_z"):
+                (gas["velocity_z"][:],
+                gas["velocity_z"].attrs["units"]),
+
+            ("gas","particle_mass"):
+                (gas["mass"][:],
+                gas["mass"].attrs["units"]),
+
+            ("gas","density"):
+                (gas["density"][:],
+                gas["density"].attrs["units"]),
+
+            ("gas","temperature"):
+                (gas["temperature"][:],
+                gas["temperature"].attrs["units"]),
+
+            ("gas","metallicity"):
+                (gas["metallicity"][:],
+                gas["metallicity"].attrs["units"]),
+
+            ("gas","smoothing_length"):
+                (gas["smoothing_length"][:],
+                gas["smoothing_length"].attrs["units"]),
+                
+            ("gas","emission_measure"):
+                (gas["emission_measure"][:],
+                gas["emission_measure"].attrs["units"]),
+        }
+
+    bbox = np.array([
+        [data[("gas","particle_position_x")][0].min(),
+        data[("gas","particle_position_x")][0].max()],
+        [data[("gas","particle_position_y")][0].min(),
+        data[("gas","particle_position_y")][0].max()],
+        [data[("gas","particle_position_z")][0].min(),
+        data[("gas","particle_position_z")][0].max()],
+    ])
+
+    loaded_data= yt.load_particles(data, bbox=bbox)
+    return loaded_data
