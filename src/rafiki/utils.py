@@ -1,7 +1,9 @@
-
 import numpy as np
 import h5py
 import yt
+from .catalog import load_catalog
+import pandas as pd
+
 
 def gen_random_indices(index_set, gen_size):
     """
@@ -107,3 +109,66 @@ def load_xray_particle_data(filename):
 
     loaded_data= yt.load_particles(data, bbox=bbox)
     return loaded_data
+
+
+def redshift_resampling(config,index_sample):
+    mode = str(config['xray']['redshift_sampling']['mode'])     #Determine mode
+    if mode=='fixed':   
+        #Use the snapshot redshift for every galaxy
+        z_fixed = float(config['xray']['redshift_sampling']['fixed_z']) 
+        return np.full(len(index_sample), z_fixed)
+    
+
+    sim_name = config['package_data']['sim']
+    z= float(config['xray']['redshift'])  
+    if sim_name=='EAGLE':
+        #Load RAFIKI-CGM galaxy catalog
+        ids,stell, halo, rad, age, sfr, ssfr,frb_locs,centrals=load_catalog(config,z)     
+    else:
+        stell, halo, rad, age, sfr, ssfr,frb_locs,centrals=load_catalog(config,z)
+        ids=None
+
+
+    if mode=='redshift':
+        obs_catalog = config['xray']['redshift_sampling']['observational_catalog']#path to comparison galaxy sample catalog
+        obs_data    = np.array(pd.read_csv(obs_catalog, header=None))
+        z_column = config['xray']['redshift_sampling']['z_column']#column of redshift in galaxy sample catalog
+        mass_column = config['xray']['redshift_sampling']['mass_column']#column of redshift in galaxy sample catalog
+        obs_z    = obs_data[:, z_column] 
+        return np.random.choice(obs_z,size=len(index_sample), replace=True)
+
+
+
+    if mode=='mass_redshift':
+
+        obs_catalog = config['xray']['redshift_sampling']['observational_catalog']#path to comparison galaxy sample catalog
+        obs_data    = np.array(pd.read_csv(obs_catalog, header=None))
+        z_column = config['xray']['redshift_sampling']['z_column']#column of redshift in galaxy sample catalog
+        mass_column = config['xray']['redshift_sampling']['mass_column']#column of redshift in galaxy sample catalog
+        obs_z    = obs_data[:, z_column] 
+        obs_mass = obs_data[:, mass_column]
+
+        galaxy_stellar=stell
+
+        bins = np.array(config['xray']['redshift_sampling']['mass_bins'])
+        z_bins = [[] for _ in range(len(bins) - 1)]
+
+        #separate galaxies into mass bins, find their redshifts
+        for mass, z in zip(obs_mass, obs_z):
+            idx = np.digitize(mass, bins) - 1
+            if 0 <= idx < len(z_bins):
+                z_bins[idx].append(z)
+
+        #randomly select redshifts based on simulated sample masses
+        sim_redshifts = []
+        for i in index_sample:
+            sim_mass = np.log10(galaxy_stellar[i])
+
+            idx = np.digitize(sim_mass, bins) - 1
+
+            if 0 <= idx < len(z_bins) and len(z_bins[idx]) > 0:
+                sim_redshifts.append(np.random.choice(z_bins[idx]))
+            else:
+                sim_redshifts.append(1)
+                
+        return(sim_redshifts)

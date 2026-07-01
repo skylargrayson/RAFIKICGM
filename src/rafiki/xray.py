@@ -13,7 +13,7 @@ import glob
 from importlib.resources import files
 from .catalog import load_catalog
 from .instruments import make_erosita
-from .utils import load_xray_particle_data
+from .utils import load_xray_particle_data, redshift_resampling
 import traceback
 from pathlib import Path
 def xray_instrument_simulation(config,index_sample, label):
@@ -43,7 +43,7 @@ def xray_instrument_simulation(config,index_sample, label):
     emax=float(config['xray']['emax']) 
     area=float(config['xray']['collecting_area']) 
     r_bins = np.array(config['xray']['radial_bins'])#creating the radial bins that will be used-this is from Zhang 2024c
-    redshift = float(config['xray']['redshift'])  
+    snap_redshift = float(config['xray']['redshift'])  
    
     if instrument.startswith("erosita"):
         instrument_dir = Path(__file__).parent / "data" / "erosita"
@@ -65,11 +65,14 @@ def xray_instrument_simulation(config,index_sample, label):
 
     failed_runs = []
     if sim == 'EAGLE':
-        ids,stell, halo, rad, age, sfr, ssfr,frb_locs,centrals=load_catalog(config, str(redshift))
+        ids,stell, halo, rad, age, sfr, ssfr,frb_locs,centrals=load_catalog(config, str(snap_redshift))
         index_to_id = {i: id_ for i, id_ in enumerate(ids)}
 
     source_model = pyxsim.CIESourceModel("apec", emin, emax, 1000, Zmet =('gas', 'metallicity'), temperature_field = ('gas', 'temperature'),emission_measure_field=('gas','emission_measure'))
-                   
+
+    redshifts = redshift_resampling(config,index_sample) 
+
+
     for i in index_sample:
         gal_number = str(i)
         if sim=='EAGLE':
@@ -77,11 +80,11 @@ def xray_instrument_simulation(config,index_sample, label):
             particles = load_xray_particle_data(xray_data_saved+f"galaxy_{gal_id}.h5")
         else:
             particles = load_xray_particle_data(xray_data_saved+f"galaxy_{gal_number}.h5")
-            
+        z=redshifts[i]
         #Make photon and event lists
         xray_fields = source_model.make_source_fields(particles, emin,emax)
         ad = particles.all_data()       
-        n_photons, n_cells = pyxsim.make_photons( output_dir+output_label+f"_photons_{gal_number}", ad, redshift, area,exp_time*1.5*1000, source_model) #for generating photons, use longer exposure time than instrument simulation
+        n_photons, n_cells = pyxsim.make_photons( output_dir+output_label+f"_photons_{gal_number}", ad, z, area,exp_time*1.5*1000, source_model) #for generating photons, use longer exposure time than instrument simulation
 
         for axis in axes:
             n_events = pyxsim.project_photons( output_dir+output_label+f"_photons_{gal_number}",  output_dir+output_label+f"_events_{gal_number}", axis, (0.0, 0.0))
@@ -93,10 +96,10 @@ def xray_instrument_simulation(config,index_sample, label):
                 inst = soxs.instrument_registry[detector]
                 cosmo = FlatLambdaCDM(H0=67.74 * u.km / u.s / u.Mpc, Tcmb0=2.725 * u.K, Om0=0.3089)
 
-                d_A = cosmo.angular_diameter_distance(redshift).to(u.kpc).value 
+                d_A = cosmo.angular_diameter_distance(z).to(u.kpc).value 
                 pixel_scale_arcsec = inst["fov"] * 60.0 / inst["num_pixels"]
                 theta_rad = (pixel_scale_arcsec * u.arcsec).to(u.rad).value
-                dl = cosmo.luminosity_distance(redshift).to(u.cm).value
+                dl = cosmo.luminosity_distance(z).to(u.cm).value
                 pixel_size_kpc = d_A * theta_rad
 
                 try:
@@ -119,7 +122,7 @@ def xray_instrument_simulation(config,index_sample, label):
                         )
                     f = fits.open(outfile)
                     d = f[1].data
-                    e_obs = convert_to_erg(np.array(d['ENERGY'])/1000, redshift, dl, emin, emax, arf, arf_e, texp)
+                    e_obs = convert_to_erg(np.array(d['ENERGY'])/1000,z, dl, emin, emax, arf, arf_e, texp)
                     num_pixels = inst["num_pixels"]
                     width = num_pixels 
                     r = np.sqrt((d['X'] - width)**2 + (d['Y'] - width)**2) * pixel_size_kpc
@@ -191,9 +194,10 @@ def xray_instrument_simulation(config,index_sample, label):
         
         meta = f.create_group('metadata') 
         meta.attrs['simulation'] = str(sim)
-        meta.attrs['redshift']  = str(redshift)
+        meta.attrs['snapshot redshift']  = str(snap_redshift)
         meta.attrs['instrument'] = str(instrument)
         meta.create_dataset('galaxy_indices', data=np.array(index_sample))  
+        meta.create_dataset('galaxy_redshifts', data=np.array(redshifts))  
         meta.create_dataset('failed_galaxies', data=np.array(failed_arr))
         if 'radial_profile' in f:
                 del f['radial_profile']
