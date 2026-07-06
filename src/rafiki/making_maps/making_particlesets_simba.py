@@ -11,8 +11,8 @@ from concurrent.futures import ProcessPoolExecutor
 soxs.set_soxs_config("frgnd_spec_model", "halosat")
 cosmo = Cosmology(hubble_constant=0.6774, omega_matter=0.3089, omega_lambda=0.6911)
 #Load in relevant files
-ds = yt.load('/Volumes/easystore/2025_Pleiades_Runs/z_01/snap_m50n512_1_0125_025.hdf5')
-gals = caesar.load('/Volumes/easystore/2025_Pleiades_Runs/z_01/m50n512_1_0125_025.hdf5')
+ds = yt.load('/Volumes/easystore/2025_Pleiades_Runs/z_01/snap_m50n512_3_05_025.hdf5')
+gals = caesar.load('/Volumes/easystore/2025_Pleiades_Runs/z_01/m50n512_3_05_025.hdf5')
 
 
 #Cutting ISM and wind particles
@@ -110,7 +110,7 @@ def process_galaxy(i):
 
     yt.save_as_dataset(
             ad.ds,
-            f"/Volumes/easystore/RAFIKI_CGM_mock_library/RAFIKI_A/snap_z0_1/X-ray/particles/galaxy_{i}.h5",
+            f"/Volumes/easystore/RAFIKI_CGM_mock_library/RAFIKI_I/snap_z0_1/X-ray/particles/galaxy_{i}.h5",
             data=data
         )
 

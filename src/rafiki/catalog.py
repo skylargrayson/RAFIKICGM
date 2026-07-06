@@ -19,7 +19,7 @@ def load_catalog(config,redshift):
     :return: central-Boolean flag if galaxies are central in their halo 
     :rtype: np.ndarray   
     '''
-
+    redshift = str(redshift)
     path_to_package_data = config['package_data']['path']
     sim_name = config['package_data']['sim']
     red_shift = {'0.1':'0_1', '0_1':'0_1', '0.5':'0_5', '0_5':'0_5','1':'1', '1.0':'1','2':'2','2.0':'2','1.':'1','2.':'2'} #To account for possible names

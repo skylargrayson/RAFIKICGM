@@ -134,7 +134,7 @@ def redshift_resampling(config,index_sample):
         obs_data    = np.array(pd.read_csv(obs_catalog, header=None))
         z_column = config['xray']['redshift_sampling']['z_column']#column of redshift in galaxy sample catalog
         mass_column = config['xray']['redshift_sampling']['mass_column']#column of redshift in galaxy sample catalog
-        obs_z    = obs_data[:, z_column] 
+        obs_z    = obs_data[:, z_column].astype(float)
         return np.random.choice(obs_z,size=len(index_sample), replace=True)
 
 
@@ -167,7 +167,7 @@ def redshift_resampling(config,index_sample):
             idx = np.digitize(sim_mass, bins) - 1
 
             if 0 <= idx < len(z_bins) and len(z_bins[idx]) > 0:
-                sim_redshifts.append(np.random.choice(z_bins[idx]))
+                sim_redshifts.append(float(np.random.choice(z_bins[idx])))
             else:
                 sim_redshifts.append(1)
                 

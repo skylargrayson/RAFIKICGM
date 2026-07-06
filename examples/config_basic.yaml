@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 package_data:
   path: '/Volumes/easystore/RAFIKI_CGM_mock_library/'
-  sim: SIMBA              #Options: SIMBA, EAGLE, RAFIKI_A-I 
+  sim: RAFIKI_A             #Options: SIMBA, EAGLE, RAFIKI_A-I 
 
 # -----------------------------------------------------------------------------
 #Analysis Selection
@@ -30,7 +30,7 @@ selection:
   #Applied in both methods as an initial cut:
   property_ranges:             
     centrals_only: true           #Restrict to central galaxies only
-    stellar_mass_min: 5e11       # Solar Masses (null=no cut)
+    stellar_mass_min: 1e11       # Solar Masses (null=no cut)
     stellar_mass_max: null
     halo_mass_min: 1e12           # Solar Massess
     halo_mass_max: 1e14      
@@ -38,7 +38,7 @@ selection:
     ssfr_max: null    
   #Used only in method: matching         
   catalog:
-    path: erosita_comparison.csv            #Comparison catalog
+    path: ./examples/erosita_comparison.csv            #Comparison catalog
     match_property: stellar_mass  #Options: stellar_mass | halo_mass    
     column: 0                    #Column index of match_property in catalog
     bins: [11, 11.05, 11.1, 11.15,11.2,11.25, 11.3]  #log10 solar masses
@@ -63,9 +63,9 @@ sz:
 xray:
   redshift: 0.1                   #Snapshot redshift (currently only 0.1 supported)
   redshift_sampling:
-    mode:          fixed          #Options: fixed, redshift, mass_redshift
+    mode:          mass_redshift          #Options: fixed, redshift, mass_redshift
     fixed_z:       0.1            #Redshift for every galaxy (reccomended to use the snapshot redshift above)
-    observational_catalog: erosita_comparison.csv        #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
+    observational_catalog: ./examples/erosita_comparison.csv        #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
     z_column: 1                   #Column index of redshift in catalog
     mass_column: 0                #Column index of stellar mass in catalog
     mass_bins:  [10.5,11,11.25,11.5,14]
@@ -99,5 +99,5 @@ xray:
 # -----------------------------------------------------------------------------
 output:
   directory: /Users/skylargrayson/Dropbox (ASU)/RAFIKI-CGM/Full Cleaned Pipeline/testing/ #Directory for all output files    
-  label: testing_new_xray #Output file preflix 
+  label: testing_redshift_resampling_rafiki #Output file preflix 
                                  #Files saved as <label>_szdat.hdf5 and/or <label>_xraydat.hdf5 

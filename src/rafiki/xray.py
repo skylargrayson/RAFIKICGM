@@ -71,16 +71,17 @@ def xray_instrument_simulation(config,index_sample, label):
     source_model = pyxsim.CIESourceModel("apec", emin, emax, 1000, Zmet =('gas', 'metallicity'), temperature_field = ('gas', 'temperature'),emission_measure_field=('gas','emission_measure'))
 
     redshifts = redshift_resampling(config,index_sample) 
+    print(np.array(redshifts))
 
-
-    for i in index_sample:
+    for j in range(len(index_sample)):
+        i=index_sample[j]
         gal_number = str(i)
         if sim=='EAGLE':
             gal_id = str(index_to_id[i])
             particles = load_xray_particle_data(xray_data_saved+f"galaxy_{gal_id}.h5")
         else:
             particles = load_xray_particle_data(xray_data_saved+f"galaxy_{gal_number}.h5")
-        z=redshifts[i]
+        z=float(redshifts[j])
         #Make photon and event lists
         xray_fields = source_model.make_source_fields(particles, emin,emax)
         ad = particles.all_data()       
@@ -137,7 +138,7 @@ def xray_instrument_simulation(config,index_sample, label):
                         di=fi[0].data
                         image_comb.append(di)
                     else:
-                        image_comb.append(np.full((num_pixels, num_pixels), np.nan))
+                        image_comb.append(np.full((num_pixels*2, num_pixels*2), np.nan))
                 except Exception as e:
                     num_pixels = inst["num_pixels"]            
                     print(f"⚠️ Skipping galaxy {i}, axis {axis}, instrument {detector}: {e}")
@@ -145,7 +146,7 @@ def xray_instrument_simulation(config,index_sample, label):
 
                     # Append zeros so shapes stay consistent
                     all_comb.append(np.full(len(r_bins)-1, np.nan))
-                    image_comb.append(np.full((num_pixels, num_pixels), np.nan))
+                    image_comb.append(np.full((num_pixels*2, num_pixels*2), np.nan))
 
                     continue
                 
@@ -194,7 +195,7 @@ def xray_instrument_simulation(config,index_sample, label):
         
         meta = f.create_group('metadata') 
         meta.attrs['simulation'] = str(sim)
-        meta.attrs['snapshot redshift']  = str(snap_redshift)
+        meta.attrs['snapshot_redshift']  = str(snap_redshift)
         meta.attrs['instrument'] = str(instrument)
         meta.create_dataset('galaxy_indices', data=np.array(index_sample))  
         meta.create_dataset('galaxy_redshifts', data=np.array(redshifts))  
