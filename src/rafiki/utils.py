@@ -5,6 +5,7 @@ from .catalog import load_catalog
 import pandas as pd
 
 
+
 def gen_random_indices(index_set, gen_size):
     """
     Generates a list of indicies by random sampling with replacement
@@ -131,7 +132,7 @@ def redshift_resampling(config,index_sample):
 
     if mode=='redshift':
         obs_catalog = config['xray']['redshift_sampling']['observational_catalog']#path to comparison galaxy sample catalog
-        obs_data    = np.array(pd.read_csv(obs_catalog, header=None))
+        obs_data    = np.array(pd.read_csv(obs_catalog))
         z_column = config['xray']['redshift_sampling']['z_column']#column of redshift in galaxy sample catalog
         mass_column = config['xray']['redshift_sampling']['mass_column']#column of redshift in galaxy sample catalog
         obs_z    = obs_data[:, z_column].astype(float)

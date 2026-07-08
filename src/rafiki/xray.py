@@ -14,6 +14,7 @@ from importlib.resources import files
 from .catalog import load_catalog
 from .instruments import make_erosita
 from .utils import load_xray_particle_data, redshift_resampling
+from .data_access import download_data
 import traceback
 from pathlib import Path
 def xray_instrument_simulation(config,index_sample, label):
@@ -37,14 +38,16 @@ def xray_instrument_simulation(config,index_sample, label):
     sim = str(config['package_data']['sim'])
     xray_data_saved = data_path + sim + '/snap_z0_1/X-ray/particles/'
     make_image = config['analysis']['xray_stacked_image']
-
     axes = ["x", "y", "z"]
     emin=float(config['xray']['emin']) 
     emax=float(config['xray']['emax']) 
     area=float(config['xray']['collecting_area']) 
     r_bins = np.array(config['xray']['radial_bins'])#creating the radial bins that will be used-this is from Zhang 2024c
     snap_redshift = float(config['xray']['redshift'])  
-   
+    red_shift = {'0.1':'0_1', '0.5':'0_5', '1':'1', '1.0':'1','2':'2','2.0':'2','1.':'1','2.':'2'} #To account for possible names
+    if str(snap_redshift) not in red_shift:
+        raise ValueError(f"⚠️ Redshift '{snap_redshift}' not recognized. Valid options are: 0.1, 0.5, 1, 2")
+    
     if instrument.startswith("erosita"):
         instrument_dir = Path(__file__).parent / "data" / "erosita"
         soxs.set_soxs_config("soxs_data_dir", str(instrument_dir))
@@ -78,9 +81,11 @@ def xray_instrument_simulation(config,index_sample, label):
         gal_number = str(i)
         if sim=='EAGLE':
             gal_id = str(index_to_id[i])
-            particles = load_xray_particle_data(xray_data_saved+f"galaxy_{gal_id}.h5")
+            xrayfile = download_data(config, f"{sim}/snap_z{red_shift[str(snap_redshift)]}/X-ray/particles/galaxy_{gal_id}.h5")
+            particles = load_xray_particle_data(xrayfile)
         else:
-            particles = load_xray_particle_data(xray_data_saved+f"galaxy_{gal_number}.h5")
+            xrayfile = download_data(config, f"{sim}/snap_z{red_shift[str(snap_redshift)]}/X-ray/particles/galaxy_{gal_number}.h5")
+            particles = load_xray_particle_data(xrayfile)
         z=float(redshifts[j])
         #Make photon and event lists
         xray_fields = source_model.make_source_fields(particles, emin,emax)
@@ -88,7 +93,7 @@ def xray_instrument_simulation(config,index_sample, label):
         n_photons, n_cells = pyxsim.make_photons( output_dir+output_label+f"_photons_{gal_number}", ad, z, area,exp_time*1.5*1000, source_model) #for generating photons, use longer exposure time than instrument simulation
 
         for axis in axes:
-            n_events = pyxsim.project_photons( output_dir+output_label+f"_photons_{gal_number}",  output_dir+output_label+f"_events_{gal_number}", axis, (0.0, 0.0))
+            n_events = pyxsim.project_photons( output_dir+output_label+f"_photons_{gal_number}",  output_dir+output_label+f"_events_{axis}_{gal_number}", axis, (0.0, 0.0))
         os.remove(output_dir+output_label+f"_photons_{gal_number}.h5") #Don't need photon lists after this point 
         for axis in axes:
             all_comb = []
@@ -109,7 +114,7 @@ def xray_instrument_simulation(config,index_sample, label):
                         output_dir,
                         f"{output_label}_gal_sample_{axis}_{gal_number}_{detector}.fits"
                     )
-                    event_file =  output_dir+output_label+f"_events_{gal_number}.h5"
+                    event_file =  output_dir+output_label+f"_events_{axis}_{gal_number}.h5"
                     soxs.instrument_simulator(                      #Makes mock images
                             event_file,
                             outfile,
@@ -158,8 +163,8 @@ def xray_instrument_simulation(config,index_sample, label):
 
             for fname in glob.glob(output_dir + output_label + "*.fits"):
                 os.remove(fname)
-            for fname in glob.glob(output_dir + output_label + "*.h5"):
-                os.remove(fname)
+        for fname in glob.glob(output_dir + output_label + "*.h5"):
+            os.remove(fname)
 
     print('Number of galaxies with no detections', len(failed_runs))
     counts = np.nanmean( np.array(all_images), axis=0)   

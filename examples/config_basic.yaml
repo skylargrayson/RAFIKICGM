@@ -6,8 +6,8 @@
 #Simulation Selection
 # -----------------------------------------------------------------------------
 package_data:
-  path: '/Volumes/easystore/RAFIKI_CGM_mock_library/'
-  sim: RAFIKI_A             #Options: SIMBA, EAGLE, RAFIKI_A-I 
+  path: '/Volumes/easystore/RAFIKI_CGM_mock_library/testing_downloads/'
+  sim: SIMBA             #Options: SIMBA, EAGLE, RAFIKI_A-I 
 
 # -----------------------------------------------------------------------------
 #Analysis Selection
@@ -18,8 +18,8 @@ analysis:
   sz_moment_profiles: false        #Stacked m=1/m=0 and m=2/m=0 moment profiles
   thermal_energy: false        #Thermal energy scaling relations
   sz_stacked_image: false       #Stacked map of Compton-y parameter
-  xray_profiles: true           #Stacked X-ray surface brightnes profiles
-  xray_stacked_image: true   #Stacked image of X-ray photon counts
+  xray_profiles: true          #Stacked X-ray surface brightnes profiles
+  xray_stacked_image: false   #Stacked image of X-ray photon counts
 
 
 # -----------------------------------------------------------------------------
@@ -30,7 +30,7 @@ selection:
   #Applied in both methods as an initial cut:
   property_ranges:             
     centrals_only: true           #Restrict to central galaxies only
-    stellar_mass_min: 1e11       # Solar Masses (null=no cut)
+    stellar_mass_min: 1.5e11       # Solar Masses (null=no cut)
     stellar_mass_max: null
     halo_mass_min: 1e12           # Solar Massess
     halo_mass_max: 1e14      
@@ -48,7 +48,7 @@ selection:
 # Thermal Sunyaev Zel'dovich settings
 # -----------------------------------------------------------------------------
 sz: 
-  redshift: 0.1                #0.1, 0.5, 1, or 2
+  redshift: 1                #0.1, 0.5, 1, or 2
   pixel_size_arcsec: 3       #Angular size of map pixel (arcsec, default=3)
   stamp_width: 30            #Cutout size around each galaxy (arcmin)
   gaussian_std: 0.16            #Gaussian beam standard deviation (arcmin)
@@ -63,7 +63,7 @@ sz:
 xray:
   redshift: 0.1                   #Snapshot redshift (currently only 0.1 supported)
   redshift_sampling:
-    mode:          mass_redshift          #Options: fixed, redshift, mass_redshift
+    mode:          redshift          #Options: fixed, redshift, mass_redshift
     fixed_z:       0.1            #Redshift for every galaxy (reccomended to use the snapshot redshift above)
     observational_catalog: ./examples/erosita_comparison.csv        #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
     z_column: 1                   #Column index of redshift in catalog
@@ -99,5 +99,5 @@ xray:
 # -----------------------------------------------------------------------------
 output:
   directory: /Users/skylargrayson/Dropbox (ASU)/RAFIKI-CGM/Full Cleaned Pipeline/testing/ #Directory for all output files    
-  label: testing_redshift_resampling_rafiki #Output file preflix 
+  label: testing_remotepull #Output file preflix 
                                  #Files saved as <label>_szdat.hdf5 and/or <label>_xraydat.hdf5 

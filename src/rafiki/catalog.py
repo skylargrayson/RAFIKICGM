@@ -1,7 +1,7 @@
 import pandas as pd
 import h5py 
 import numpy as np
-
+from .data_access import download_data
 
 def load_catalog(config,redshift): 
     ''' 
@@ -24,9 +24,11 @@ def load_catalog(config,redshift):
     sim_name = config['package_data']['sim']
     red_shift = {'0.1':'0_1', '0_1':'0_1', '0.5':'0_5', '0_5':'0_5','1':'1', '1.0':'1','2':'2','2.0':'2','1.':'1','2.':'2'} #To account for possible names
     if redshift not in red_shift:
-        raise ValueError(f"Redshift '{redshift}' not recognized. Valid options are: 0.1, 0.5, 1, 2")
-
-    path = path_to_package_data+sim_name+'/snap_z'+red_shift[redshift]+'/galaxy_catalog.hdf5'
+        raise ValueError(f"⚠️ Redshift '{redshift}' not recognized. Valid options are: 0.1, 0.5, 1, 2")
+    
+    path = download_data(
+            config,
+            f"{sim_name}/snap_z"+red_shift[redshift]+"/galaxy_catalog.hdf5")
 
     if sim_name =='EAGLE':
         with h5py.File(path, 'r') as f:

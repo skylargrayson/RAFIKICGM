@@ -9,6 +9,7 @@ from scipy.stats import bootstrap
 from scipy.stats import bootstrap
 import h5py
 from .catalog import load_catalog
+from .data_access import download_data
 
 def determining_frb_size(box_size, z, comov, angular_res):
     '''
@@ -46,7 +47,6 @@ def cut_stamps(config, index_sample): #DONE NOT TESTED
     '''
 
     #Load relevant info from config
-    path_to_package_data = config['package_data']['path']
     sim_name = config['package_data']['sim']
     redshift = str(config['sz']['redshift'])
     pixel_scale = config['sz']['pixel_size_arcsec'] #gives us the physical scale of each pixel in the FRB 
@@ -60,19 +60,22 @@ def cut_stamps(config, index_sample): #DONE NOT TESTED
     #Map to redshift labels
     red_shift = {'0.1':'0_1', '0.5':'0_5', '1':'1', '1.0':'1','2':'2','2.0':'2','1.':'1','2.':'2'} #To account for possible names
     if redshift not in red_shift:
-        raise ValueError(f"Redshift '{redshift}' not recognized. Valid options are: 0.1, 0.5, 1, 2")
+        raise ValueError(f"⚠️ Redshift '{redshift}' not recognized. Valid options are: 0.1, 0.5, 1, 2")
 
-    sz_dat_path = path_to_package_data+sim_name+'/snap_z'+red_shift[redshift]+'/tSZ/'+sim_name+'_'+red_shift[redshift]
+
     cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
     comov = cosmo.comoving_distance(float(redshift)).to(u.kpc).value 
     frb=determining_frb_size(50, float(redshift), comov, pixel_scale) #Number of pixels in your fixed resolution buffer, suggested to correspond to resolution at least twice that of your observational comparison
 
+    xfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_x_szy.npy")
+    yfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_y_szy.npy")
+    zfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_z_szy.npy")
 
-    sz_dat_x = np.load(sz_dat_path+'_x_szy.npy')
+    sz_dat_x = np.load(xfile)
     stamps_x = cropping_sz_x(sz_dat_x, frb_locs[0], frb_locs[1], frb_locs[2], index_sample, stamp_width, frb) 
-    sz_dat_y = np.load(sz_dat_path+'_y_szy.npy')
+    sz_dat_y = np.load(yfile)
     stamps_y = cropping_sz_x(sz_dat_y, frb_locs[0], frb_locs[1], frb_locs[2], index_sample, stamp_width, frb) 
-    sz_dat_z = np.load(sz_dat_path+'_z_szy.npy')
+    sz_dat_z = np.load(zfile)
     stamps_z = cropping_sz_z(sz_dat_z, frb_locs[0], frb_locs[1], frb_locs[2], index_sample, stamp_width, frb) 
 
     return stamps_x+stamps_y+stamps_z
