@@ -11,6 +11,11 @@ The RAFIKI-CGM data products consist of:
 
 .. _comptony-maps:
 
+
+
+.. figure:: ../_static/images/makingmaps.drawio.svg
+    :width: 100%
+
 Compton-y Maps
 --------------
 

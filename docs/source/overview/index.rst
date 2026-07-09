@@ -1,10 +1,60 @@
 Overview
 ========
 
+Why was RAFIKI-CGM Developed?
+-----------------------------
+
+Understanding how different physical processes such as AGN feedback shape galactic environments and diffuse gas is a key question of modern astrophysics.
+Cosmological simulations provide a powerful tool for studying galactic evolution, as while they are calibrated to match global galaxy properties, they contain different models 
+for baryonic processes that can lead to very different predictions for gas properties. Constraining these models and understanding the role feedback plays in galaxy evolution 
+requires robust comparisons of simulations and observations. This is not a trivial process, but RAFIKI-CGM aims to make it as simple and robust as possible!
+
+The hot gas phase of the circumgalactic medium is a useful place to look for fingerprints of feedback processes, but it is difficult to study due to its diffuse nature. There are two 
+main probes of this hot gas: the thermal Sunyaev-Zel'dovich effect and soft X-ray emission. At halo masses below the cluster scale, both signals are only detectable via stacking methods. 
+RAFIKI-CGM thus generates mock stacked data that can be compared against a range of observations.
+
+RAFIKI-CGM uses data from 11 cosmological simulations with differing AGN feedback prescriptions to generate a large suite of possible comparisons. 
+For more information on the simulations currently included, see :doc:`overview/simulations`.
+
+
+RAFIKI-CGM Pipeline
+-------------------
+The flowchart below shows the general steps taken when generating mock CGM data products in RAFIKI CGM. Purple
+boxes indicate steps that require user specification in the YAML config file (see :docs:`running`).
+
+.. figure:: ../_static/images/rafiki_cgm_flowchart.drawio.svg
+    :width: 100%
+
+
+RAFIKI-CGM downloads pre-made data for the user so that access to the raw simulation snapshots is not required. The flowchart below shows how the RAFIKI-CGM pre-made maps are generated. For more detail on this process visit :doc:`/generatingdata` 
+
+
+
+
+RAFIKI-CGM Results
+------------------
+
+RAFIKI-CGM generates hdf5 files containing the following data:
+
+Thermal SZ
+
+* Stacked images of the Compton-y parameter 
+* Radial profiles of the Compton-y parameter
+* Moment profiles probing asymmetries in stacked data
+* Mass: thermal energy scaling relations derived from Compton-y measurements 
+
+Thermal X-ray Emission 
+
+* Stacked images of X-ray photon counts
+* Radial profiles of X-ray surface brightness
+
+
+More detail on RAFIKI-CGM outputs can be found here: :doc:`outputs`
+
+
 .. toctree::
    :maxdepth: 1
 
    simulations
    data_products
-   pipeline
    galaxy_selection

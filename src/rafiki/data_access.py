@@ -10,6 +10,8 @@ def download_data(config, remotepath):
     :type config: yaml  
     :param remotepath: path to file for download
     :type remotepath: string
+    :return: path to downloaded file
+    :rtype: string
     
     """
     remote_url = "https://pub-978f7726476c460383c469555c7b769d.r2.dev/v1"

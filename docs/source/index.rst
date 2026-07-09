@@ -37,7 +37,7 @@ If you have questions, contact Skylar Grayson sigrayso@asu.edu
 Table of Contents
 ==================
 .. toctree::
-   usage
+   quickstart
    overview/index
    running
    outputs

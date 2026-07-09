@@ -10,6 +10,7 @@ from scipy.stats import bootstrap
 import h5py
 from .catalog import load_catalog
 from .data_access import download_data
+from .utils import redshift_resampling
 
 def determining_frb_size(box_size, z, comov, angular_res):
     '''
@@ -62,14 +63,14 @@ def cut_stamps(config, index_sample): #DONE NOT TESTED
     if redshift not in red_shift:
         raise ValueError(f"⚠️ Redshift '{redshift}' not recognized. Valid options are: 0.1, 0.5, 1, 2")
 
+    
+    xfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_x_szy.npy")
+    yfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_y_szy.npy")
+    zfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_z_szy.npy")
 
     cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
     comov = cosmo.comoving_distance(float(redshift)).to(u.kpc).value 
     frb=determining_frb_size(50, float(redshift), comov, pixel_scale) #Number of pixels in your fixed resolution buffer, suggested to correspond to resolution at least twice that of your observational comparison
-
-    xfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_x_szy.npy")
-    yfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_y_szy.npy")
-    zfile = download_data(config,f"{sim_name}/snap_z{red_shift[redshift]}/tSZ/{sim_name}_{red_shift[redshift]}_z_szy.npy")
 
     sz_dat_x = np.load(xfile)
     stamps_x = cropping_sz_x(sz_dat_x, frb_locs[0], frb_locs[1], frb_locs[2], index_sample, stamp_width, frb) 

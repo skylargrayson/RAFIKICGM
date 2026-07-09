@@ -45,6 +45,15 @@ def single_catalog_bootstrap(data, boot_size, loop_size):
 
 
 def load_xray_particle_data(filename):
+    """
+    Unpacks RAFIKI-CGM saved particle list data products for use in pyxsim and SOXS
+
+    :param filename: Name of hdf5 file containing particle data
+    :type data: string
+    :return: yt loaded particle data ready for use in pyxsim mock X-ray generation
+    """
+
+
     with h5py.File(filename) as f:
 
         gas = f["data"]
@@ -113,6 +122,19 @@ def load_xray_particle_data(filename):
 
 
 def redshift_resampling(config,index_sample):
+    """
+    Determines redshifts for mock data generation. Currently able to use one redshift for all galaxies, to randomly select from an observed redshift catalog, and to randomly select
+    from an observed redshift catalog within stellar mass bins (to account for observational biases)
+
+    :param config: input yaml file
+    :type config: yaml 
+    :param index_sample: array of galaxy indices in the RAFIKI-CGM catalog file that will be used for our mock galaxy sample
+    :type index_sample: np.ndarray
+    :return: array of redshifts for each galaxy in index_sample
+    :rtype: np.ndarray
+    """
+
+
     mode = str(config['xray']['redshift_sampling']['mode'])     #Determine mode
     if mode=='fixed':   
         #Use the snapshot redshift for every galaxy
