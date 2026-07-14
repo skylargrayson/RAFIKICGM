@@ -55,9 +55,11 @@ Saved to  ``<directory/label>_xraydat.hdf5``
     <label>_xraydat.hdf5
     ├── metadata/
     │   ├── simulation               (name of simulation used to generate data)
-    │   ├── redshift                 (redshift of snapshot used to generate data)
+    │   ├── snapshot_redshift        (redshift of snapshot used to generate data)
     │   ├── instrument               (SOXS instrument used for mock data)
-    │   └── galaxy indices           (indices of the galaxy sample)  
+    │   ├── galaxy_indices           (indices of the galaxy sample)  
+    │   ├── galaxy_redshifts         (redshift for each individual galaxy's mock observation) 
+    │   └── failed_galaxies          (indices of galaxies that had no detected emission)
     │   
     ├── radial_profile/              (if analysis.radial_profiles: true)
     │   ├── radius                   (center of radial bins in kpc)

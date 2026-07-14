@@ -1,5 +1,5 @@
-Generating Your Own Maps
-========================
+Dev: Generating Your Own Maps
+=============================
 
 RAFIKI-CGM automatically includes the necessary data products for 9 RAFIKI simulations, SIMBA, EAGLE, and EAGLE-AGNdT9. However, the package
 does include pipelines needed for generating your own data products from other simulations. In its current form, these are limited to SIMBA and EAGLE runs.

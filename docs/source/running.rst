@@ -293,7 +293,7 @@ Here you input the parameters that are relevant for conducting the SZ analysis
 	Can use any SOXS supported instrument or ``erosita`` for the eROSITA-SRG instrument
 
 ``xray.exposure_time_ks``
-	*float* - Exposure time for the mock observation in units of kiloseconds. Must be less than 2000 
+	*float* - Exposure time for the mock observation in units of kiloseconds. 
 
 ``xray.emin``
 	*float* - Minimum photon energy wanted to model in units of keV
@@ -349,6 +349,9 @@ Tips and Common Issues
 **The pipeline runs but output files are empty**
     Make sure ``output.label`` and ``output.directory`` are set correctly in your config and that the output directory exists before running. 
 
+
+**There are no photons detected from the mock X-ray observations**
+    Most likely the exposure times are too low, make sure ``xray.exposure_time_ks`` is set to a sufficiently long time.
 
 
 

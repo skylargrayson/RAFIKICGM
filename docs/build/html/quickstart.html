@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Quickstart &#8212; RAFIKI-CGM 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Overview" href="overview/index.html" />
+    <link rel="prev" title="Welcome to RAFIKI-CGM’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">¶</a></h1>
+<p>This page walks you from installation to your first mock observations using RAFIKI-CGM.</p>
+<section id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>rafikicgm
+</pre></div>
+</div>
+<p>Or, to install the latest development version from source:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/skylargrayson/RAFIKICGM.git
+<span class="nb">cd</span><span class="w"> </span>RAFIKICGM
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>RAFIKI-CGM is a python-based code requiring the following packages, which should be automatically installed by pip.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://yt-project.org/">yt</a> (version 4.1.3 or higher)</p></li>
+<li><p><a class="reference external" href="https://numpy.org/">NumPy</a></p></li>
+<li><p><a class="reference external" href="https://scipy.org/">SciPy</a></p></li>
+<li><p><a class="reference external" href="https://www.astropy.org/">Astropy</a></p></li>
+<li><p><a class="reference external" href="https://www.h5py.org/">h5py</a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/">matplotlib</a></p></li>
+<li><p><a class="reference external" href="https://cython.org/">cython</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/psutil/">psutil</a></p></li>
+<li><p><a class="reference external" href="https://joblib.readthedocs.io/en/stable/">joblib</a></p></li>
+<li><p><a class="reference external" href="https://caesar.readthedocs.io/en/latest/getting_started.html#">caesar</a></p></li>
+<li><p><a class="reference external" href="https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/index.html">pyXSIM</a></p></li>
+<li><p><a class="reference external" href="https://hea-www.cfa.harvard.edu/soxs/">SOXS</a></p></li>
+</ul>
+<p>We recommend installing <code class="docutils literal notranslate"><span class="pre">yt</span></code> via Anaconda:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>yt
+</pre></div>
+</div>
+</section>
+<section id="basic-configuration">
+<h2>Basic Configuration<a class="headerlink" href="#basic-configuration" title="Permalink to this heading">¶</a></h2>
+<p>RAFIKI-CGM is ran from a YAML config file. Every key is described in detail in <a class="reference internal" href="running.html"><span class="doc">Running RAFIKI-CGM</span></a>.
+A complete, working config is given in the examples directory of the github, and is also copied below.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">literalinclude</span><span class="p">::</span> ../examples/quickstart_config.yaml
+    <span class="nc">:language:</span> yaml
+</pre></div>
+</div>
+</section>
+<section id="run-the-pipeline">
+<h2>Run the Pipeline<a class="headerlink" href="#run-the-pipeline" title="Permalink to this heading">¶</a></h2>
+<p>RAFIKI-CGM can be run from the command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rafikicgm<span class="w"> </span>run<span class="w"> </span>quickstart_config.yaml
+</pre></div>
+</div>
+</section>
+<section id="check-the-output">
+<h2>Check the Output<a class="headerlink" href="#check-the-output" title="Permalink to this heading">¶</a></h2>
+<p>A successful run will produce</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">./outputs/quickstart_szdat.h5</span></code> – the simulated SZ data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./outsputs/quickstart_xraydat.h5</span></code> – the simulated X-ray data</p></li>
+</ul>
+<p>You can examine the structure of these output files in more detail in <a class="reference internal" href="outputs.html"><span class="doc">Outputs</span></a>.</p>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Learn more in <span class="xref std std-doc">overview</span></p></li>
+<li><p>Walk through a full example in <span class="xref std std-doc">cookbook</span></p></li>
+<li><p>See every config option in <a class="reference internal" href="running.html"><span class="doc">Running RAFIKI-CGM</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/images/logo.png" alt="Logo"/>
+    
+    <h1 class="logo logo-name">RAFIKI-CGM</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">Mock data of the hot CGM in cosmological simulations</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=skylargrayson&repo=RAFIKICGM&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-configuration">Basic Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-the-pipeline">Run the Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#check-the-output">Check the Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Running RAFIKI-CGM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generatingdata.html">Generating Your Own Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Code Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to RAFIKI-CGM’s documentation!</a></li>
+      <li>Next: <a href="overview/index.html" title="next chapter">Overview</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Skylar Grayson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/quickstart.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

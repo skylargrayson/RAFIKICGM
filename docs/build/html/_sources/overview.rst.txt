@@ -1,98 +1,55 @@
+
 Overview
-===================
+========
+   
+Why was RAFIKI-CGM Developed?
+-----------------------------
 
-RAFIKI-CGM was developed to provide an easy-to-use tool for generating mock stacked CGM data from hydrodynamic simulations. The 
-set of RAFIKI-CGM data products are generated from a suite of 
+Understanding how different physical processes such as AGN feedback shape galactic environments and diffuse gas is a key question of modern astrophysics.
+Cosmological simulations provide a powerful tool for studying galactic evolution, as while they are calibrated to match global galaxy properties, they contain different models 
+for baryonic processes that can lead to very different predictions for gas properties. Constraining these models and understanding the role feedback plays in galaxy evolution 
+requires robust comparisons of simulations and observations. This is not a trivial process, but RAFIKI-CGM aims to make it as simple and robust as possible!
 
-.. _sim_options:
+The hot gas phase of the circumgalactic medium is a useful place to look for fingerprints of feedback processes, but it is difficult to study due to its diffuse nature. There are two 
+main probes of this hot gas: the thermal Sunyaev-Zel'dovich effect and soft X-ray emission. At halo masses below the cluster scale, both signals are only detectable via stacking methods. 
+RAFIKI-CGM thus generates mock stacked data that can be compared against a range of observations.
 
-Simulations 
------------
-The data products in RAFIKI-CGM are generated from three different simulations/simulation suites. Here we briefly summarize the differences and provide 
-links for finding more information. 
-
-+-------------------------+--------------------+-------------------+--------------------+
-| Simulation              | SIMBA              | EAGLE             | RAFIKI             |
-+=========================+====================+===================+====================+
-| Reference Paper         | Dave et al. 2019   | Schaye et al. 2015| Grayson et al. 2026|
-+-------------------------+--------------------+-------------------+--------------------+
-| Runs                    | Fiducial           |Fiducial and AGNdT9|Suite of 9 runs(A-I)|
-+-------------------------+--------------------+-------------------+--------------------+
-| Box Size                | 50 Mpc/h           |50 Mpc/h           |50 Mpc/h            |
-+-------------------------+--------------------+-------------------+--------------------+
-| Initial Gas Particle    |                    |                   |                    |
-| Mass (h^-1 M_\odot)     |                    |                   |                    |
-+-------------------------+--------------------+-------------------+--------------------+
-| Softening Length        |                    |                   |                    |
-+-------------------------+--------------------+-------------------+--------------------+
-| Cosmology               |  Planck 2016       |   Planck 2013     | Planck 2016        |
-+-------------------------+--------------------+-------------------+--------------------+
-
-AGN Feedback Implmentations
-
-While RAFIKI-CGM can be used to explore a broad range of research questions related to the baryon cycle and the circumgalactic medium,
-the RAFIKI suite was intially developed specifically to probe the impact of feedback from active galactic nuclei (AGN). Thus we here briefly
-summarize the different treatments of AGN feedback in the simulations incorporated in RAFIKI-CGM. 
-
-SIMBA:
-
-RAFIKI:
-
-EAGLE: 
+RAFIKI-CGM uses data from 11 cosmological simulations with differing AGN feedback prescriptions to generate a large suite of possible comparisons. 
+For more information on the simulations currently included, see :doc:`simulations`.
 
 
-Maps and Pre-Made Data Products
--------------------------------
+RAFIKI-CGM Pipeline
+-------------------
+The flowchart below shows the general steps taken when generating mock CGM data products in RAFIKI CGM. Purple
+boxes indicate steps that require user specification in the YAML config file (see :doc:`running`).
 
-The RAFIKI-CGM data products consist of: 
-
-- Maps of the Compton-y parameter projected along the x, y, and z simulation box axis.
-- Event files containing projected X-ray photon data (see `pyXSIM documentation <https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/photon_lists/event_lists.html>`_ for more detail)
-- Galaxy catalogs containing position, stellar mass, halo mass, virial radius, star formation rate, and age data
-
-
-
-Pipeline
-----------
-Existing RAFIKI-CGM Maps and Data Products:
-
-       
-
-RAFIKI-CGM Pipeline Flowchart:
-
-.. figure:: _static/images/rafiki_cgm_flowchart.drawio.svg
+.. figure:: ./_static/images/rafiki_cgm_flowchart.drawio.svg
     :width: 100%
 
-Generating Maps Flowchart:
 
-.. figure:: _static/images/makingmaps.drawio.svg
-    :width: 100%
+RAFIKI-CGM downloads pre-made data for the user so that access to the raw simulation snapshots is not required. The flowchart below shows how the RAFIKI-CGM pre-made maps are generated. For more detail on this process visit :doc:`/generatingdata` 
 
-.. _selection-methods:
 
-Galaxy Selection
-----------------
 
-There are two ways to select your galaxy sample in RAFIKI-CGM. 
 
-**Ranges** (``selection.method: ranges``)
-    Selects all galaxies within the simulation that fall within specified galaxy property ranges. Currently cuts can be made by stellar mass, halo mass, specific star 
-    formation rate, and/or whether the galaxy is central in its halo. With this selection, sample size is set by how many galaxies in a given simulation box match the properties you choose. If no galaxies fit the criteria, the pipeline won't run. 
+RAFIKI-CGM Results
+------------------
 
-**Matching** (``selection.method: matching``)
-    Resamples the simulation to match the stellar or halo mass distribution of a comparison catalog (i.e. an observational sample). Galaxies are binned and resampled with weights corresponding 
-    to the representation of their mass bin in the comparison distribution. 
+RAFIKI-CGM generates hdf5 files containing the following data:
 
-    Key parameters: 
+Thermal SZ
 
-    - ``bins`` - mass bin edges used for matching distributions
-    - ``n_sample`` - number of galaxies to resample (the final stack will be three times this value, one per projection direction)
-    - ``match_property`` - property to match on (currently limited to ``stellar_mass`` or ``halo_mass``)
+* Stacked images of the Compton-y parameter 
+* Radial profiles of the Compton-y parameter
+* Moment profiles probing asymmetries in stacked data
+* Mass: thermal energy scaling relations derived from Compton-y measurements 
 
-    .. note::
-        Any cuts set in selection.property_ranges will also be applied before matching. This allows for cominations, for example applying a halo mass cut to exclude clusters before matching 
-        an observed stellar mass distribution
+Thermal X-ray Emission 
 
-    .. warning:: 
-        Larger ``n_sample`` values will more closely match the comparison catalog, but the runtime will increase accordingly.
+* Stacked images of X-ray photon counts
+* Radial profiles of X-ray surface brightness
+
+
+More detail on RAFIKI-CGM outputs can be found here: :doc:`outputs`
+
 

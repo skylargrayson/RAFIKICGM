@@ -37,9 +37,11 @@ If you have questions, contact Skylar Grayson sigrayso@asu.edu
 Table of Contents
 ==================
 .. toctree::
-   usage
-   overview/index
+   quickstart
+   overview
+   simulations
    running
+   galaxy_selection
    outputs
    cookbook/index
    generatingdata

@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Simulations" href="simulations.html" />
-    <link rel="prev" title="Installation" href="../usage.html" />
+    <link rel="prev" title="Quickstart" href="../quickstart.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -40,10 +40,47 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="simulations.html">Simulations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_products.html">Maps and Pre-Made Data Products</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="galaxy_selection.html">Galaxy Selection</a></li>
 </ul>
 </div>
+<section id="why-was-rafiki-cgm-developed">
+<h2>Why was RAFIKI-CGM Developed?<a class="headerlink" href="#why-was-rafiki-cgm-developed" title="Permalink to this heading">¶</a></h2>
+<p>Understanding how different physical processes such as AGN feedback shape galactic environments and diffuse gas is a key question of modern astrophysics.
+Cosmological simulations provide a powerful tool for studying galactic evolution, as while they are calibrated to match global galaxy properties, they contain different models
+for baryonic processes that can lead to very different predictions for gas properties. Constraining these models and understanding the role feedback plays in galaxy evolution
+requires robust comparisons of simulations and observations. This is not a trivial process, but RAFIKI-CGM aims to make it as simple and robust as possible!</p>
+<p>The hot gas phase of the circumgalactic medium is a useful place to look for fingerprints of feedback processes, but it is difficult to study due to its diffuse nature. There are two
+main probes of this hot gas: the thermal Sunyaev-Zel’dovich effect and soft X-ray emission. At halo masses below the cluster scale, both signals are only detectable via stacking methods.
+RAFIKI-CGM thus generates mock stacked data that can be compared against a range of observations.</p>
+<p>RAFIKI-CGM uses data from 11 cosmological simulations with differing AGN feedback prescriptions to generate a large suite of possible comparisons.
+For more information on the simulations currently included, see <span class="xref std std-doc">overview/simulations</span>.</p>
+</section>
+<section id="rafiki-cgm-pipeline">
+<h2>RAFIKI-CGM Pipeline<a class="headerlink" href="#rafiki-cgm-pipeline" title="Permalink to this heading">¶</a></h2>
+<p>The flowchart below shows the general steps taken when generating mock CGM data products in RAFIKI CGM. Purple
+boxes indicate steps that require user specification in the YAML config file (see <a href="#id1"><span class="problematic" id="id2">:docs:`running`</span></a>).</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/rafiki_cgm_flowchart.drawio.svg"><img alt="../_images/rafiki_cgm_flowchart.drawio.svg" src="../_images/rafiki_cgm_flowchart.drawio.svg" width="100%" /></a>
+</figure>
+<p>RAFIKI-CGM downloads pre-made data for the user so that access to the raw simulation snapshots is not required. The flowchart below shows how the RAFIKI-CGM pre-made maps are generated. For more detail on this process visit <a class="reference internal" href="../generatingdata.html"><span class="doc">Generating Your Own Maps</span></a></p>
+</section>
+<section id="rafiki-cgm-results">
+<h2>RAFIKI-CGM Results<a class="headerlink" href="#rafiki-cgm-results" title="Permalink to this heading">¶</a></h2>
+<p>RAFIKI-CGM generates hdf5 files containing the following data:</p>
+<p>Thermal SZ</p>
+<ul class="simple">
+<li><p>Stacked images of the Compton-y parameter</p></li>
+<li><p>Radial profiles of the Compton-y parameter</p></li>
+<li><p>Moment profiles probing asymmetries in stacked data</p></li>
+<li><p>Mass: thermal energy scaling relations derived from Compton-y measurements</p></li>
+</ul>
+<p>Thermal X-ray Emission</p>
+<ul class="simple">
+<li><p>Stacked images of X-ray photon counts</p></li>
+<li><p>Radial profiles of X-ray surface brightness</p></li>
+</ul>
+<p>More detail on RAFIKI-CGM outputs can be found here: <span class="xref std std-doc">outputs</span></p>
+</section>
 </section>
 
 
@@ -70,7 +107,7 @@
 
 
 <p>
-<iframe src="https://ghbtns.com/github-btn.html?user=yourusername&repo=rafiki-cgm&type=watch&count=true&size=large&v=2"
+<iframe src="https://ghbtns.com/github-btn.html?user=skylargrayson&repo=RAFIKICGM&type=watch&count=true&size=large&v=2"
   allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p>
 
@@ -80,12 +117,14 @@
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../usage.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="simulations.html">Simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_products.html">Maps and Pre-Made Data Products</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html">Pipelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="galaxy_selection.html">Galaxy Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-was-rafiki-cgm-developed">Why was RAFIKI-CGM Developed?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rafiki-cgm-pipeline">RAFIKI-CGM Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rafiki-cgm-results">RAFIKI-CGM Results</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../running.html">Running RAFIKI-CGM</a></li>
@@ -99,7 +138,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../usage.html" title="previous chapter">Installation</a></li>
+      <li>Previous: <a href="../quickstart.html" title="previous chapter">Quickstart</a></li>
       <li>Next: <a href="simulations.html" title="next chapter">Simulations</a></li>
   </ul></li>
 </ul>

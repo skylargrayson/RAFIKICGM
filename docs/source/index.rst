@@ -38,8 +38,10 @@ Table of Contents
 ==================
 .. toctree::
    quickstart
-   overview/index
+   overview
+   simulations
    running
+   galaxy_selection
    outputs
    cookbook/index
    generatingdata

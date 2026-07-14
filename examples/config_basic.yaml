@@ -43,6 +43,14 @@ selection:
     column: 0                    #Column index of match_property in catalog
     bins: [11, 11.05, 11.1, 11.15,11.2,11.25, 11.3]  #log10 solar masses
     n_sample: 300                 #Number of galaxies in resampled selection 
+  #For assigning redshifts to each galaxy for mock observation
+  redshift_sampling:
+    mode:          redshift          #Options: fixed, redshift, mass_redshift
+    fixed_z:       0.1            #Redshift for every galaxy (reccomended to use the snapshot redshift above)
+    observational_catalog: ./examples/erosita_comparison.csv        #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
+    z_column: 1                   #Column index of redshift in catalog
+    mass_column: 0                #Column index of stellar mass in catalog
+    mass_bins:  [10.5,11,11.25,11.5,14]
 
 # -----------------------------------------------------------------------------
 # Thermal Sunyaev Zel'dovich settings
@@ -62,13 +70,6 @@ sz:
 # -----------------------------------------------------------------------------
 xray:
   redshift: 0.1                   #Snapshot redshift (currently only 0.1 supported)
-  redshift_sampling:
-    mode:          redshift          #Options: fixed, redshift, mass_redshift
-    fixed_z:       0.1            #Redshift for every galaxy (reccomended to use the snapshot redshift above)
-    observational_catalog: ./examples/erosita_comparison.csv        #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
-    z_column: 1                   #Column index of redshift in catalog
-    mass_column: 0                #Column index of stellar mass in catalog
-    mass_bins:  [10.5,11,11.25,11.5,14]
   soxs_instrument: erosita        #Options: erosita | <any SOXS instrument label>
   exposure_time_ks: 1000          #Exposure time (ks)
   collecting_area:  2100          #Collecting area of instrument (cm^2)
