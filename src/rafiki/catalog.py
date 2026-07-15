@@ -162,7 +162,7 @@ def select_by_matching(config,z):
     obs_catalog = config['selection']['catalog']['path'] #path to comparison galaxy sample catalog
     match_by = str(config['selection']['catalog']['match_property']) #property you want to match
     prop_column = config['selection']['catalog']['column'] #column of above property in galaxy sample catalog
-    obs_data    = np.array(pd.read_csv(obs_catalog, header=None))
+    obs_data    = np.array(pd.read_csv(obs_catalog))
     obs_prop    = obs_data[:, prop_column] 
 
     if sim_name=='EAGLE':
