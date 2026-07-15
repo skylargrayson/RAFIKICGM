@@ -165,7 +165,7 @@ def redshift_resampling(config,index_sample):
     if mode=='mass_redshift':
 
         obs_catalog = config['selection']['redshift_sampling']['observational_catalog']#path to comparison galaxy sample catalog
-        obs_data    = np.array(pd.read_csv(obs_catalog, header=None))
+        obs_data    = np.array(pd.read_csv(obs_catalog))
         z_column = config['selection']['redshift_sampling']['z_column']#column of redshift in galaxy sample catalog
         mass_column = config['selection']['redshift_sampling']['mass_column']#column of redshift in galaxy sample catalog
         obs_z    = obs_data[:, z_column] 

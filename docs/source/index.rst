@@ -7,7 +7,7 @@ Welcome to RAFIKI-CGM's documentation!
 ======================================
 
 RAFIKI-CGM is an open-source python package developed to analyze simulated microwave and X-ray data. In its current form, it consists of a database with maps from 11 simulations
-and the ability to generate stacked data products for easy comparison against observations. 
+and the ability to generate stacked data products for easy comparison against tSZ and soft X-ray observations. 
 
 .. note:: 
 	This project is under active development. There may still be bugs and limited functionality.

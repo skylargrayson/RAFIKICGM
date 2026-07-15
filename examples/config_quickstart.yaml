@@ -6,21 +6,21 @@
 #Simulation Selection
 # -----------------------------------------------------------------------------
 package_data:
-  path: '/Volumes/easystore/RAFIKI_CGM_mock_library/testing_downloads/'
+  path: '/path/to/directory/for/downloaded/data'
   sim: SIMBA             #Options: SIMBA, EAGLE, RAFIKI_A-I 
-  redshift: 0.1
+  redshift: 0.1          #Options: 0.1, 0.5, 1, 2
 
 # -----------------------------------------------------------------------------
 #Analysis Selection
 # -----------------------------------------------------------------------------
 # Set to true to enable each data product
 analysis:
-  sz_radial_profiles: false       #Stacked Compton-y radial profile
-  sz_moment_profiles: false       #Stacked m=1/m=0 and m=2/m=0 moment profiles
+  sz_radial_profiles: true       #Stacked Compton-y radial profile
+  sz_moment_profiles: true       #Stacked m=1/m=0 and m=2/m=0 moment profiles
   thermal_energy: true        #Thermal energy scaling relations
-  sz_stacked_image: false    #Stacked map of Compton-y parameter
-  xray_profiles: false          #Stacked X-ray surface brightnes profiles
-  xray_stacked_image: false   #Stacked image of X-ray photon counts
+  sz_stacked_image: true   #Stacked map of Compton-y parameter
+  xray_profiles: true          #Stacked X-ray surface brightnes profiles
+  xray_stacked_image: true   #Stacked image of X-ray photon counts
 
 
 # -----------------------------------------------------------------------------
@@ -39,7 +39,7 @@ selection:
     ssfr_max: null    
   #Used only in method: matching         
   catalog:
-    path: ./examples/erosita_comparison.csv            #Comparison catalog
+    path: comparison_catalog.csv            #Comparison catalog
     match_property: stellar_mass  #Options: stellar_mass | halo_mass    
     column: 0                    #Column index of match_property in catalog
     bins: [11, 11.05, 11.1, 11.15,11.2,11.25, 11.3]  #log10 solar masses
@@ -48,7 +48,7 @@ selection:
   redshift_sampling:
     mode:          redshift          #Options: fixed, redshift, mass_redshift
     fixed_z:       0.1            #Redshift for every galaxy (reccomended to use the snapshot redshift above)
-    observational_catalog: ./examples/erosita_comparison.csv        #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
+    observational_catalog: comparison_catalog.csv        #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
     z_column: 1                   #Column index of redshift in catalog
     mass_column: 0                #Column index of stellar mass in catalog
     mass_bins:  [10.5,11,11.25,11.5,14]
@@ -112,6 +112,6 @@ xray:
 # Output
 # -----------------------------------------------------------------------------
 output:
-  directory: /Users/skylargrayson/Dropbox (ASU)/RAFIKI-CGM/Full Cleaned Pipeline/testing/ #Directory for all output files    
-  label: testing_szredshifts #Output file preflix 
+  directory: /path/to/output/directory #Directory for all output files    
+  label: SIMBA_z0_1 #Output file preflix 
                                  #Files saved as <label>_szdat.hdf5 and/or <label>_xraydat.hdf5 
