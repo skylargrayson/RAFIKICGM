@@ -245,6 +245,44 @@ def azimuthalAverage(image, pixel_scale, bins, center=None):
     return radial_prof
 
 
+def make_stacked_images(stamps, kernel, label,config, index_sample, galaxy_redshifts):
+    make_image = config['analysis']['sz_stacked_image']
+    pixel_scale = config['sz']['pixel_size_arcsec']* u.arcsec #gives us the physical scale of each pixel in the FRB
+    snapshot_redshift = float(config['package_data']['redshift'])
+
+    cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
+    D_map = cosmo.angular_diameter_distance(snapshot_redshift)
+    pixel_size_kpc = (pixel_scale.to(u.rad).value * D_map).to(u.kpc).value
+
+    n_gal=len(galaxy_redshifts)
+
+    convolved_stamps= [] 
+    for j in range(len(stamps)): 
+        galaxy_redshift = galaxy_redshifts[j%n_gal]
+        D_A = cosmo.angular_diameter_distance(galaxy_redshift).to(u.kpc).value
+        pixel_scale_arcsec = (pixel_size_kpc / D_A * u.rad).to(u.arcsec).value
+        kernel_pixels = kernel/ pixel_scale_arcsec
+        gauss_kernel = Gaussian2DKernel(kernel_pixels) 
+        i = stamps[j]
+        dd =convolve_fft(i[0], gauss_kernel)     
+        convolved_stamps.append(dd)
+
+    stacked_image = np.mean( np.array(convolved_stamps), axis=0)   
+    sim_name = str(config['package_data']['sim'])
+    redshift = config['package_data']['redshift']
+     with h5py.File(label+'_szdat.hdf5', 'a') as f: 
+        if 'metadata' not in f:
+            meta = f.create_group('metadata') 
+            meta.attrs['simulation'] = sim_name
+            meta.attrs['redshift']  = str(redshift)
+            meta.create_dataset('galaxy_indices', data=np.array(index_sample))
+            meta.create_dataset('galaxy_redshifts', data=np.array(galaxy_redshifts))  
+
+        if 'image' in f:
+            del f['image']
+        stacked_image = f.create_group('image')
+        stacked_image.create_dataset('image_dat', data=np.array(stacked_image))
+
 
 
 def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_redshifts):

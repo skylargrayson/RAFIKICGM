@@ -2,7 +2,7 @@ import os
 import astropy.units as u
 from astropy.cosmology import FlatLambdaCDM
 from .catalog import  select_by_ranges, select_by_matching
-from .sz import cut_stamps, make_radial_profiles, make_moment_profiles, thermal_energy
+from .sz import cut_stamps, make_radial_profiles, make_moment_profiles, thermal_energy, make_stacked_images
 from .xray import xray_instrument_simulation
 from .utils import redshift_resampling
 
@@ -76,6 +76,11 @@ def run_sz(config, gal_sample_indices, galaxy_redshifts):
         ap_arcsec = config['sz']['thermal_energy']['aperture']*60
         thermal_energy(compton_y_stamps, beam_scale*60, save_to, ap_arcsec, config, gal_sample_indices, galaxy_redshifts) #Will save files as output.directory.label_szdat.hdf5
         print('Completed thermal energy analysis.')
+    if config['analysis']['sz_stacked_image']:
+        print('Beginnning making SZ image...')
+        make_stacked_images(compton_y_stamps, beam_scale*60,save_to, config,gal_sample_indices, galaxy_redshifts) #Will save files as output.directory.label_szdat.hdf5
+        print('Completed SZ image.')
+
     print('Finished')
 
 def run_xray(config, gal_sample_indices, galaxy_redshifts):
