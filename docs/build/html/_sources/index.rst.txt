@@ -25,7 +25,7 @@ Features
                 - Radial profiles of stacked X-ray surface brightness
                 - Radial profiles of the moments of symmetry for the surface brightness maps
 
-        - Immense user flexibility in galaxy sample, including matching distributions from input catalog, setting limits by galaxy property, and selecting data from a range of redshift snapshots
+        - Immense user flexibility in galaxy sample, including matching distributions from input catalog, setting limits by galaxy property, and selecting data from a range of snapshot redshifts
 
 
 Support
@@ -40,6 +40,7 @@ Table of Contents
    quickstart
    overview
    simulations
+   data_products
    running
    galaxy_selection
    outputs

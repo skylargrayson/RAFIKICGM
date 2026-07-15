@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Cookbooks" href="cookbook/index.html" />
-    <link rel="prev" title="Running RAFIKI-CGM" href="running.html" />
+    <link rel="prev" title="Galaxy Selection" href="galaxy_selection.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -81,9 +81,11 @@ The structure of the files are outlined below.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;label&gt;_xraydat.hdf5
 ├── metadata/
 │   ├── simulation               (name of simulation used to generate data)
-│   ├── redshift                 (redshift of snapshot used to generate data)
+│   ├── snapshot_redshift        (redshift of snapshot used to generate data)
 │   ├── instrument               (SOXS instrument used for mock data)
-│   └── galaxy indices           (indices of the galaxy sample)
+│   ├── galaxy_indices           (indices of the galaxy sample)
+│   ├── galaxy_redshifts         (redshift for each individual galaxy&#39;s mock observation)
+│   └── failed_galaxies          (indices of galaxies that had no detected emission)
 │
 ├── radial_profile/              (if analysis.radial_profiles: true)
 │   ├── radius                   (center of radial bins in kpc)
@@ -132,15 +134,17 @@ The structure of the files are outlined below.</p>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulations.html">Simulations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="running.html">Running RAFIKI-CGM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="galaxy_selection.html">Galaxy Selection</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Outputs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#sz-data-products">SZ Data Products</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#x-ray-data-products">X-ray Data Products</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="generatingdata.html">Generating Your Own Maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generatingdata.html">Dev: Generating Your Own Maps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Code Reference</a></li>
 </ul>
 
@@ -148,7 +152,7 @@ The structure of the files are outlined below.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="running.html" title="previous chapter">Running RAFIKI-CGM</a></li>
+      <li>Previous: <a href="galaxy_selection.html" title="previous chapter">Galaxy Selection</a></li>
       <li>Next: <a href="cookbook/index.html" title="next chapter">Cookbooks</a></li>
   </ul></li>
 </ul>

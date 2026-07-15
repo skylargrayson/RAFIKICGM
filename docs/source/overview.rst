@@ -1,4 +1,3 @@
-
 Overview
 ========
    
@@ -22,15 +21,17 @@ RAFIKI-CGM Pipeline
 -------------------
 
 RAFIKI-CGM consists of two distinct pipelines for generating mock tSZ and X-ray data. For ease of use, RAFIKI-CGM includes pre-made data products so that the user does not need 
-to download the entire simulation snapshot.
+to download the entire simulation snapshot. These are described in detail in :doc:`data_products`, but here we provide a brief summary. 
 
-The tSZ pipeline uses maps of the Compton-y parameeter for the full simulation volume, projected along each of the three simulation axes. During analysis, 
+The tSZ pipeline uses maps of the Compton-y parameter for the full simulation volume, projected along each of the three simulation axes. During analysis, 
 RAFIKI-CGM extracts stamps around selected galaxies and stacks them to create final mock-observables.
 
 The X-ray pipeline instead uses precomputed particle catalogs containing the gas properties around the 500 most massive galaxies in each simulation box. 
 Unlike the tSZ analysis, X-ray observations depend strongly on instrument sensitivites, exposure time, and redshift. Working directly from particle data allows for increased user-specified flexibility 
 around these parameters throughout the entire forward modelling process. For the selected galaxies, particle data is passed through `pyXSIM <https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/index.html>`_ 
-and `SOXS <https://hea-www.cfa.harvard.edu/soxs/>`_to produce mock X-ray observations.
+and `SOXS <https://hea-www.cfa.harvard.edu/soxs/>`_ to produce mock X-ray observations.
+
+Galaxy catalogs are also provided for each simulation snapshot that are used to select analog galaxies based on various properties such as stellar mass, halo mass, star-formation rate, and redshift.
 
 To minimize download times and storage requirements, RAFIKI-CGM automatically downloads only the data products required for the selected simulation and galaxy sample, storing them in a user-specified directory.
 

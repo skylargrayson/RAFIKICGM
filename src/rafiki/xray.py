@@ -17,7 +17,7 @@ from .utils import load_xray_particle_data, redshift_resampling
 from .data_access import download_data
 import traceback
 from pathlib import Path
-def xray_instrument_simulation(config,index_sample, label):
+def xray_instrument_simulation(config,index_sample, galaxy_redshifts, label):
     '''
     Run through the X-ray pipeline. Creates mock observations, generates radial profiles of surface brigtness and stacks. Also generates stacked images if analysis.xray_stacked_image: true
     Does not return anything, just saves data to file
@@ -43,7 +43,7 @@ def xray_instrument_simulation(config,index_sample, label):
     emax=float(config['xray']['emax']) 
     area=float(config['xray']['collecting_area']) 
     r_bins = np.array(config['xray']['radial_bins'])#creating the radial bins that will be used-this is from Zhang 2024c
-    snap_redshift = float(config['xray']['redshift'])  
+    snap_redshift = float(config['package_data']['redshift'])  
     red_shift = {'0.1':'0_1', '0.5':'0_5', '1':'1', '1.0':'1','2':'2','2.0':'2','1.':'1','2.':'2'} #To account for possible names
     if str(snap_redshift) not in red_shift:
         raise ValueError(f"⚠️ Redshift '{snap_redshift}' not recognized. Valid options are: 0.1, 0.5, 1, 2")
@@ -73,8 +73,7 @@ def xray_instrument_simulation(config,index_sample, label):
 
     source_model = pyxsim.CIESourceModel("apec", emin, emax, 1000, Zmet =('gas', 'metallicity'), temperature_field = ('gas', 'temperature'),emission_measure_field=('gas','emission_measure'))
 
-    redshifts = redshift_resampling(config,index_sample) 
-    print(np.array(redshifts))
+    
 
     for j in range(len(index_sample)):
         i=index_sample[j]
@@ -86,7 +85,7 @@ def xray_instrument_simulation(config,index_sample, label):
         else:
             xrayfile = download_data(config, f"{sim}/snap_z{red_shift[str(snap_redshift)]}/X-ray/particles/galaxy_{gal_number}.h5")
             particles = load_xray_particle_data(xrayfile)
-        z=float(redshifts[j])
+        z=float(galaxy_redshifts[j])
         #Make photon and event lists
         xray_fields = source_model.make_source_fields(particles, emin,emax)
         ad = particles.all_data()       
@@ -203,7 +202,7 @@ def xray_instrument_simulation(config,index_sample, label):
         meta.attrs['snapshot_redshift']  = str(snap_redshift)
         meta.attrs['instrument'] = str(instrument)
         meta.create_dataset('galaxy_indices', data=np.array(index_sample))  
-        meta.create_dataset('galaxy_redshifts', data=np.array(redshifts))  
+        meta.create_dataset('galaxy_redshifts', data=np.array(galaxy_redshifts))  
         meta.create_dataset('failed_galaxies', data=np.array(failed_arr))
         if 'radial_profile' in f:
                 del f['radial_profile']

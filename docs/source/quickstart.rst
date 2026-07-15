@@ -45,13 +45,8 @@ We recommend installing ``yt`` via Anaconda:
 Basic Configuration
 -------------------
 
-RAFIKI-CGM is ran from a YAML config file. Every key is described in detail in :doc:`running`. 
-A complete, working config is given in the examples directory of the github, and is also copied below.
-
-.. code-block:: rst
-
-    .. literalinclude:: ../examples/quickstart_config.yaml
-        :language: yaml
+RAFIKI-CGM is ran from a YAML config file. 
+A complete, working config is given in the examples directory of the github and in :doc:`running`, where every key is also described in detail.
 
 
 Run the Pipeline

@@ -143,7 +143,7 @@ def redshift_resampling(config,index_sample):
     
 
     sim_name = config['package_data']['sim']
-    z= float(config['xray']['redshift'])  
+    z= float(config['package_data']['redshift'])  
     if sim_name=='EAGLE':
         #Load RAFIKI-CGM galaxy catalog
         ids,stell, halo, rad, age, sfr, ssfr,frb_locs,centrals=load_catalog(config,z)     

@@ -1,27 +1,20 @@
-
-
-Maps and Pre-Made Data Products
+Pre-Made Data Products
 ===============================
 
 The RAFIKI-CGM data products consist of: 
 
 - Maps of the Compton-y parameter projected along the x, y, and z simulation box axis.
-- Event files containing projected X-ray photon data 
+- Selected particle data around the 500 most massive galaxies
 - Galaxy catalogs containing galaxy and halo properties. 
 
 .. _comptony-maps:
-
-
-
-.. figure:: ../_static/images/makingmaps.drawio.svg
-    :width: 100%
 
 Compton-y Maps
 --------------
 
 For each simulation snapshot, a 2D map of the Compton-y parameter is generated. The maps are generated using yt's fixed resolution buffer 
 (FRB) functionality, such that each pixel has a width corresponding to 3 arcseconds at the redshift of the snapshot. (If you generate your own
-map, be sure to update ``sz.pixel_size_arcsec`` in the configuration file).
+map, be sure to update ``sz.pixel_size_arcsec`` in the configuration file). If galaxies are desired to be simulated at a range of redshifts (see :doc:`galaxy_selection`) this scale will be adjusted internally in the pipeline prior to convolving with a Gaussian beam. 
 
 .. figure:: ../_static/images/comptonymaps.png
     :width: 100%
@@ -30,15 +23,18 @@ map, be sure to update ``sz.pixel_size_arcsec`` in the configuration file).
     stamps will be cut out of these maps around galaxies in the identified sample and stacked to generate a range of data products. 
 
 
+Particle Data
+-------------
 
-.. _event_files:
+Generating mock X-ray observations depends strongly on instrument sensitivites, exposure time, and redshift. Therefore instead of providing pre-generated maps of X-ray emission, 
+the pre-made data product for the X-ray pipeline works off of hdf5 files containing particle data around the 500 most massive galaxies in each simulation box. This generally corresponds
+to a lower stellar mass limit of :math:`4.2 \times 10^{10} M_\odot`. To save storage space, these particle files only contain the information needed for X-ray simulation, namely
+positions, velocities, density, temperature, metallicity, emission measure, mass, and smoothing length. These are saved as yt datasets that can then be reloaded into pyXSIM to generate and project
+mock photons. 
 
-Event Files
------------
+.. note:: 
+	Future releases will expand particle sets to lower stellar mass.
 
-For a complete explanation of the event file structure and use, see `the pyXSIM documentation <https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/photon_lists/event_lists.html>`_ 
-Event files are generated for the 500 most massive galaxies in each simulation box, which generally corresponds to a stellar mass limit of 
-4.2 x 10^10 solar. Lower-mass samples are planned for future RAFIKI-CGM releases. 
 
 
 Galaxy Catalogs

@@ -25,7 +25,8 @@ A full example configuration file is shown below, as well as detailed documentat
 	# -----------------------------------------------------------------------------
 	package_data:
 		path: '/Volumes/easystore/RAFIKI_CGM_mock_library/'
-		sim: RAFIKI_I                  #Options: SIMBA, EAGLE, RAFIKI_A-I 
+		sim: RAFIKI_A                  #Options: SIMBA, EAGLE, RAFIKI_A-I 
+		redshift: 0.1				   #Options: 0.1, 0.5, 1, 2
 
 	# -----------------------------------------------------------------------------
 	#Analysis Selection
@@ -56,12 +57,20 @@ A full example configuration file is shown below, as well as detailed documentat
 			ssfr_max: null    
 		#Used only in method: matching         
 		catalog:
-			path: keep_CEN.csv            #Comparison catalog
+			path: comparison.csv            #Comparison catalog
 			match_property: stellar_mass  #Options: stellar_mass | halo_mass    
-			column: 1                     #Column index of match_property in catalog
+			column: 0                     #Column index of match_property in catalog
 			bins: [10.5,10.6,10.7,10.8,10.9,11,
 				11.1,11.2,11.3,11.4,11.5,11.6]  #log10 solar masses
 			n_sample: 150                 #Number of galaxies in resampled selection 
+		#For assigning redshifts to each galaxy for mock observation
+		redshift_sampling:
+			mode: mass_redshift          	  #Options: fixed, redshift, mass_redshift
+			fixed_z: 0.1            	  #Redshift for every galaxy (reccomended to use the snapshot redshift above)
+			observational_catalog: comparison.csv       #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
+			z_column: 1                   #Column index of redshift in catalog
+			mass_column: 0                #Column index of stellar mass in catalog
+			mass_bins:  [10.5,11,11.25,11.5,14] #Bin edges for 
 
 	# -----------------------------------------------------------------------------
 	# Thermal Sunyaev Zel'dovich settings
@@ -111,6 +120,7 @@ Simulation Selection
 	package_data:
 		path: /Volumes/easystore/RAFIKI_CGM_mock_library/
 		sim: RAFIKI_A
+		redshift: 0.1
 
 This section points to where the maps and galaxy catalogs are saved and allows you to select the simulation you would like to analyze
 
@@ -119,6 +129,9 @@ This section points to where the maps and galaxy catalogs are saved and allows y
 
 ``package_data.sim``
 	*str* - Name of the simulation you want to use to generate the mock data. Either ``SIMBA``, ``EAGLE``, or ``RAFIKI_A-I``. See :ref:`sim_options` to understand the differences
+
+``package_data.redshift``
+	*float* - Redshift of the snapshot you wish to analyse. Options are 0.1, 0.5, 1, and 2 for tSZ analysis. If doing X-ray analysis, currently only 0.1 is supported/
 
 Analysis Selection
 ^^^^^^^^^^^^^^^^^^^^
@@ -153,21 +166,32 @@ Galaxy Selection
 .. code-block:: yaml
 
 	selection:
-	method: matching              #either "ranges": specify limits on galaxy properties or "matching": match user input galaxy catalog
-	property_ranges:             #Use these to set limits if method set to ranges
-		centrals_only: true        #Only select galaxies central in their halos
-		stellar_mass_min: 1.0e11   # Solar Masses
-		stellar_mass_max: null     
-		halo_mass_min: null        # Solar Masses
-		halo_mass_max: null        
-		ssfr_min: null             # Gyr^-1
-		ssfr_max: null             
-	catalog:
-		path: keep_CEN.csv #File path for observational galaxy catalog
-		match_property: stellar_mass              #Galaxy property you are trying to match-if mass make sure in log units
-		column: 1                                 #Column index (i.e. 0 is the first column) of the property above in the observational catalog file
-		bins: [10.5,10.6,10.7,10.8,10.9,11,11.1,11.2,11.3,11.4,11.5,11.6] #Stellar mass bins for the histogram of galaxy sample selection
-		n_sample: 100    
+		method: matching                #Options: ranges | matching
+		#Applied in both methods as an initial cut:
+		property_ranges:             
+			centrals_only: true           #Restrict to central galaxies only
+			stellar_mass_min: 8e10        # Solar Masses (null=no cut)
+			stellar_mass_max: null     
+			halo_mass_min: null           # Solar Massess
+			halo_mass_max: 1e14        
+			ssfr_min: null                # Gyr^-1
+			ssfr_max: null    
+		#Used only in method: matching         
+		catalog:
+			path: comparison.csv            #Comparison catalog
+			match_property: stellar_mass  #Options: stellar_mass | halo_mass    
+			column: 0                     #Column index of match_property in catalog
+			bins: [10.5,10.6,10.7,10.8,10.9,11,
+				11.1,11.2,11.3,11.4,11.5,11.6]  #log10 solar masses
+			n_sample: 150                 #Number of galaxies in resampled selection 
+		#For assigning redshifts to each galaxy for mock observation
+		redshift_sampling:
+			mode: mass_redshift          	  #Options: fixed, redshift, mass_redshift
+			fixed_z: 0.1            	  #Redshift for every galaxy (reccomended to use the snapshot redshift above)
+			observational_catalog: comparison.csv       #If not using fixed, comparison catalog with sample z (if redshift mode) or sample z and mass if (mass_redshift mode)
+			z_column: 1                   #Column index of redshift in catalog
+			mass_column: 0                #Column index of stellar mass in catalog
+			mass_bins:  [10.5,11,11.25,11.5,14] #Bin edges for  
 
 Here you identify how you want to generate the mock galaxy catalog and input the relevant parameters. There are two ways of doing this, set by selection.method
 
@@ -216,12 +240,35 @@ Here you identify how you want to generate the mock galaxy catalog and input the
 	*str*  - The galaxy sample property you want to match in the catalog. 
 	Either ``stellar_mass`` or ``halo_mass``
 
+``selection.catalog.column``
+	*int* - Column containing the galaxy sample property in the catalog
+
 ``selection.catalog.bins``
 	*array* - Bin edges for histogram that will be used to match sample distributions. 
 	Units of log solar masses
 
 ``selection.catalog.n_sample``
 	*float* - Number of galaxies in resampled selection 
+
+``selection.redshift_sampling.mode``
+	*str* - Identify how you wish to set redshifts for your mock galaxy sample. There are three options: ``fixed``, ``redshift``, and ``mass_redshift``. The first 
+	sets all galaxies at the same fixed redshift, the second randomly assigns from a comparison catalog, and third randomly assigns after binning by mass to account for observational biases. (See :ref:`redshift-methods`  for detailed documentation). 
+
+``selection.redshift_sampling.fixed_z``
+	*float* - Redshift to place all galaxies if ``selection.redshift_sampling.mode: fixed``
+
+``selection.redshift_sampling.observational_catalog``
+	*str* - Path and file name for catalog containing the comparison galaxy sample information
+
+``selection.redshift_sampling.z_column``
+	*str* - Column containing the redshift values in the catalog
+
+``selection.redshift_sampling.mass_column``
+	*str* - Column containing the stellar mass values in the catalog
+
+``selection.redshift_sampling.mass_bins``
+	*array* - Bin edges for histogram that will be used to divide galaxies before redshift resampling. 
+	Units of log solar masses
 
 
 SZ Analysis Parameters
@@ -230,7 +277,6 @@ SZ Analysis Parameters
 .. code-block:: yaml
 
 	sz:
-		redshift: 1				   #0.1, 0.5, 1, or 2
 		pixel_size_arcsec: 3       #default 3 for pre-generated maps
 		stamp_width: 15            #width of square to cut around galaxies in arcminutes. Default 15
 		gaussian_std: 2            #standard deviation of the Gaussian beam in units of arcminutes. Default 2
@@ -241,9 +287,6 @@ SZ Analysis Parameters
 
 
 Here you input the parameters that are relevant for conducting the SZ analysis
-
-``sz.redshift``
-	*float* - Redshift of the snapshot you wish to analyse. Options are 0.1, 0.5, 1, and 2.
 
 ``sz.pixel_size_arcsec``
 	*float* - Pixel scale of the Compton-y map. If using built-in RAFIKI-CGM maps the default is 3 arcseconds and this will never need to be changed. 
@@ -271,7 +314,6 @@ Here you input the parameters that are relevant for conducting the SZ analysis
 .. code-block:: yaml
 
 	xray:
-		redshift: 0.1               #Snapshot redshift (currently only 0.1 supported)
 		soxs_instrument: erosita    #Options: erosita | <any SOXS instrument label>
 		exposure_time_ks: 1000      #Exposure time (ks)
 		emin: 0.5                   #Minimum energy (keV)
@@ -284,16 +326,12 @@ Here you input the parameters that are relevant for conducting the SZ analysis
 		instr_bkgnd: false        #Instrumental background
 		foreground: false         #Astrophysical foregrounds  
 
-
-``xray.redshift``
-	*float* - Redshift of the snapshot you wish to analyse. Currently only supported for z=0.1.
-
 ``xray.sox_instrument``
 	*str* - Name of the instrument wanted for mock data. 
 	Can use any SOXS supported instrument or ``erosita`` for the eROSITA-SRG instrument
 
 ``xray.exposure_time_ks``
-	*float* - Exposure time for the mock observation in units of kiloseconds. Must be less than 2000 
+	*float* - Exposure time for the mock observation in units of kiloseconds. 
 
 ``xray.emin``
 	*float* - Minimum photon energy wanted to model in units of keV
@@ -349,6 +387,9 @@ Tips and Common Issues
 **The pipeline runs but output files are empty**
     Make sure ``output.label`` and ``output.directory`` are set correctly in your config and that the output directory exists before running. 
 
+
+**There are no photons detected from the mock X-ray observations**
+    Most likely the exposure times are too low, make sure ``xray.exposure_time_ks`` is set to a sufficiently long time.
 
 
 

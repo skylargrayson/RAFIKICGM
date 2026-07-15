@@ -45,8 +45,8 @@ The RAFIKI (Refining AGN Feedback in Kinetic Implementations) suite was designed
 a range of galaxy and baryon properties. More detail and first results can be found in the `simulation paper <https://ui.adsabs.harvard.edu/abs/2025arXiv251019924G/abstract>`_
 
 The initial suite consisted of 20 runs, but only 9 were able to successfully match the z=1 GSMF, and those 9 are included in this package. 
-The runs are parameterized by :math:`\epsilon_w` the energetic efficiency of the wind mode, and  :math:`\epsilon_j` the energetic efficiency of the jet mode, where:math:`\epsilon` is the 
-energetic efficiency of the feedback :math:`E_{kin} = \epsilon L_{bol}`. The table below summarizes the parameters for each run included in RAFIKI-CGM. 
+The runs are parameterized by :math:`\epsilon_w`: the energetic efficiency of the wind mode, and  :math:`\epsilon_j`: the energetic efficiency of the jet mode, where :math:`\epsilon` is the 
+energetic efficiency of the feedback (:math:`E_{kin} = \epsilon L_{bol}`). The table below summarizes the parameters for each run included in RAFIKI-CGM. 
 
 +------------+--------------------+---------------------+
 | Simulation | :math:`\epsilon_j` | :math:`\epsilon_w`  |

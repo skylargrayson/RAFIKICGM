@@ -1,8 +1,10 @@
+Generating a Mock Galaxy Catalog
+================================
 
 .. _selection-methods:
 
-Galaxy Selection
-----------------
+Selection Methods 
+-----------------
 
 There are two ways to select your galaxy sample in RAFIKI-CGM. 
 
@@ -28,5 +30,35 @@ There are two ways to select your galaxy sample in RAFIKI-CGM.
         Larger ``n_sample`` values will more closely match the comparison catalog, but the runtime will increase accordingly. See the images 
         below that show the difference in distribution matching between N=400 (~20 minute runtime) and N=1000 (~1 hour runtime).
 
-    
 
+.. _redshift-methods:
+
+Assigning Redshifts
+-------------------
+
+Once galaxies are selected, they are each assigned a redshift for mock observation. There are three ways to do this in RAFIKI-CGM.
+
+**Fixed** (``selection.redshift_sampling: fixed``)
+    Places every galaxy at a fixed redshift (suggested to be the redshift of snapshot) 
+
+    Key parameters:
+
+    - ``selection.redshift_sampling.fixed_z`` - redshift
+
+**Matching Redshift Distribution** (``selection.redshift_sampling: redshift``)
+    Randomly selects and assigns redshifts from a user-provided comparison catalog (i.e. an observational sample). 
+
+    Key parameters:
+
+    - ``selection.redshift_sampling.observational_catalog`` - Path to catalog containing redshift distribution you wish to resample from
+    - ``selection.redshift_sampling.z_column`` - Column corresponding to the redshift data in the linked file
+
+**Matching Redshift Distribution within Mass Bins** (``selection.redshift_sampling: mass_redshift``)
+    Randomly selects and assigns redshifts from a user-provided comparison catalog after binning by stellar mass. This methodology can be used to account for baises in the sampling. 
+
+    Key parameters:
+
+    - ``selection.redshift_sampling.observational_catalog`` - Path to catalog containing redshift distribution you wish to resample from
+    - ``selection.redshift_sampling.z_column`` - Column corresponding to the redshift data in the linked file
+    - ``selection.redshift_sampling.mass_column`` - Column corresponding to the stellar mass data in the linked file
+    - ``selection.redshift_sampling.mass_bins`` - Mass bin edges used for matching distribution

@@ -49,7 +49,7 @@ def cut_stamps(config, index_sample): #DONE NOT TESTED
 
     #Load relevant info from config
     sim_name = config['package_data']['sim']
-    redshift = str(config['sz']['redshift'])
+    redshift = str(config['package_data']['redshift'])
     pixel_scale = config['sz']['pixel_size_arcsec'] #gives us the physical scale of each pixel in the FRB 
     stamp_width = config['sz']['stamp_width']*60/pixel_scale #gives us stamp width in pixel units
     if sim_name=='EAGLE':
@@ -203,7 +203,7 @@ def cropping_sz_z(sz_dat, xs, ys, zs, sample, width, frb):
             q+=1
     return lists
 
-def azimuthalAverage(image, center=None):
+def azimuthalAverage(image, pixel_scale, bins, center=None):
     """
     Calculates the azimuthally averaged radial profile. Taken from with some alterations https://github.com/mkolopanis/python/blob/master/radialProfile.py
         
@@ -223,7 +223,7 @@ def azimuthalAverage(image, center=None):
         center = np.array([(x.max()-x.min())/2.0+1, (x.max()-x.min())/2.0+1]) #+1 added because rounding down below
     
     
-    r = np.hypot(x - center[0], y - center[1]) #np.hypot gives the hypotenuse of a triangle with the given legs
+    r = pixel_scale*np.hypot(x - center[0], y - center[1]) #np.hypot gives the hypotenuse of a triangle with the given legs
     
     # Get sorted radii
     ind = np.argsort(r.flat)  
@@ -231,71 +231,29 @@ def azimuthalAverage(image, center=None):
     r_sorted = r.flat[ind]  #Sorted list of the radii of the pixels, converted to integers below
     i_sorted = image.flat[ind]  #Sorting the image pixels by the radii
      
-    # Get the integer part of the radii (bin size = 1)
-    r_int = r_sorted.astype(int)
+    which_bin = np.digitize(r_sorted,bins)
+    radial_prof=[]
+    for i in range(1,len(bins)):
+        mask=which_bin==i
 
-    # Find all pixels that fall within each radial bin.
-    deltar = r_int[1:] - r_int[:-1]# Assumes all radii represented
-    rind3 = np.where(deltar)[0] # location of changed radius
-    rind = np.insert(rind3, 0, 0)
-    nr = rind[1:] - rind[:-1] # number of radius bin
-    
-    
-    # Cumulative sum to figure out sums for each radius bin
-    csim = np.cumsum(i_sorted, dtype=float)
-    tbin = csim[rind[1:]] - csim[rind[:-1]]
-    
-    radial_prof = tbin / nr
-    
-    #Below is my addition for calculating error, breaks up pixels into separate sub-arrays by radius range, averages. 
-    split = [i_sorted[rind[r]:rind[r+1]] for r in range(len(rind)-1)]
- 
-    errors = [np.std(split[i])/np.sqrt(len(split[i]))for i in range(len(split))]
+        if np.any(mask):
+            vals=i_sorted[mask]
+            radial_prof.append(np.mean(vals))
+        else:
+            radial_prof.append(np.nan)
+
     return radial_prof
 
 
-def make_stacked_sz_image(stamps,kernel,label, config,index_sample):
-    '''
-    Convolves data and generates a 2D map of the stacked compton-y parameter for galaxies in the sample
-        
-    :param stamps: A nested array of the SZ data around galaxies. Output of ``cropping_sz`` function
-    :type stamps: list[float]
-    :param kernel: The standard deviation of the Gaussian kernel in units of pixels
-    :type kernel: float
-    :param label: File name and path to save outputs
-    :type label: str
-    :param config: input yaml files
-    :type config: yaml   
-    :return: Saves an hdf5 file containing containing stacked radial profile and meta data about the sample
-    '''
-    sim_name = str(config['package_data']['sim'])
-    redshift = config['sz']['redshift']
-    gauss_kernel = Gaussian2DKernel(kernel) 
-    convolved_stamps = []
-    for i in stamps: 
-        convolved_stamps.append(convolve_fft(i[0], gauss_kernel))
-    stacked = np.mean( np.array(convolved_stamps), axis=0)   
-
-    with h5py.File(label+'_szdat.hdf5', 'a') as f: 
-        if 'metadata' not in f:
-            meta = f.create_group('metadata') 
-            meta.attrs['simulation'] = sim_name
-            meta.attrs['redshift']  = str(redshift)
-            meta.attrs['galaxy_indices']=np.array(index_sample)
-        if 'image' in f:
-            del f['image']
-        rad = f.create_group('image')
-        rad.create_dataset('image_dat', data=np.array(stacked))
 
 
-
-def make_radial_profiles(stamps, kernel, label,config, index_sample):
+def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_redshifts):
     '''
     Convolves data and generates radial profiles for all galaxies in your sample
         
     :param stamps: A nested array of the SZ data around galaxies. Output of ``cropping_sz`` function
     :type stamps: list[float]
-    :param kernel: The standard deviation of the Gaussian kernel in units of pixels
+    :param kernel: The standard deviation of the Gaussian kernel in units of arcseconds
     :type kernel: float
     :param label: File name and path to save outputs
     :type label: str
@@ -303,56 +261,76 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample):
     :type config: yaml   
     :return: Saves an hdf5 file containing containing stacked radial profile and meta data about the sample
     '''
-   
+    
+    #Convert scales for redshifts for each individual galaxy
+    make_image = config['analysis']['sz_stacked_image']
+    pixel_scale = config['sz']['pixel_size_arcsec']* u.arcsec #gives us the physical scale of each pixel in the FRB
+    snapshot_redshift = float(config['package_data']['redshift'])
+    radial_bins = np.array(config['sz']['radial_bins'])
+    cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
+    D_map = cosmo.angular_diameter_distance(snapshot_redshift)
+    pixel_size_kpc = (pixel_scale.to(u.rad).value * D_map).to(u.kpc).value
+
+    n_gal=len(galaxy_redshifts)
 
     #Convolve and generate radial profile
-    gauss_kernel = Gaussian2DKernel(kernel) 
     radial_sample = []
-    for i in stamps: 
+    convolved_stamps= [] 
+    for j in range(len(stamps)): 
+        galaxy_redshift = galaxy_redshifts[j%n_gal]
+        D_A = cosmo.angular_diameter_distance(galaxy_redshift).to(u.kpc).value
+        pixel_scale_arcsec = (pixel_size_kpc / D_A * u.rad).to(u.arcsec).value
+        kernel_pixels = kernel/ pixel_scale_arcsec
+        gauss_kernel = Gaussian2DKernel(kernel_pixels) 
+        i = stamps[j]
         dd =convolve_fft(i[0], gauss_kernel)     
-        aa=azimuthalAverage(dd, center = None)     
+        convolved_stamps.append(dd)
+        aa=azimuthalAverage(dd, pixel_size_kpc, radial_bins, center = None)  
         radial_sample.append(aa)
     flip = list(zip(*radial_sample))
     #Stack and bootstrap errors
     y_a = []
     err_a = []
     for i in flip:
-        y_a.append(np.mean(i))
+        y_a.append(np.nanmean(i))
         ii = (i,)
-        bootstrap_ci = bootstrap(ii, np.mean, confidence_level=0.95,
+        bootstrap_ci = bootstrap(ii, np.nanmean, confidence_level=0.95,
                                 random_state=1, method='percentile')
         err_a.append(bootstrap_ci.standard_error)
-       
-    pixel_scale = float(config['sz']['pixel_size_arcsec'])
-    x_a = [(i*pixel_scale)/60 for i in range(len(y_a))] #convert radial profiles from pixel units to arcminutes
+    
+    x_a =  0.5 * (radial_bins[:-1] + radial_bins[1:])
     #Open metadata from config file
     sim_name = str(config['package_data']['sim'])
-    redshift = config['sz']['redshift']
-
+    redshift = config['package_data']['redshift']
+    stacked_image = np.mean( np.array(convolved_stamps), axis=0)   
     with h5py.File(label+'_szdat.hdf5', 'a') as f: 
         if 'metadata' not in f:
             meta = f.create_group('metadata') 
             meta.attrs['simulation'] = sim_name
             meta.attrs['redshift']  = str(redshift)
-            meta.attrs['galaxy_indices']=np.array(index_sample)
+            meta.create_dataset('galaxy_indices', data=np.array(index_sample))
+            meta.create_dataset('galaxy_redshifts', data=np.array(galaxy_redshifts))  
 
         if 'radial_profile' in f:
             del f['radial_profile']
         rad = f.create_group('radial_profile')
         rad.create_dataset('radius', data=np.array(x_a))
-        rad['radius'].attrs['units'] = 'Arcminutes'
+        rad['radius'].attrs['units'] = 'kpc'
         rad.create_dataset('compton-y', data=np.array(y_a))
         rad['compton-y'].attrs['units'] = ''
         rad.create_dataset('error', data=np.array(err_a))
         rad['error'].attrs['units'] = ''
 
+        if make_image:
+            stacked_image = f.create_group('image')
+            stacked_image.create_dataset('image_dat', data=np.array(stacked_image))
     return 
 
 
 
 """FUNCTIONS FOR FINDING MOMENTS """
 
-def topolar(img, order=1):
+def topolar(img, pixel_size_kpc, order=1):
     """
     Transforms an image into polar coordinates
         
@@ -381,12 +359,12 @@ def topolar(img, order=1):
 
     polar = geometric_transform(img, transform, order=order)
 
-    rads = max_radius * np.linspace(0,1,img.shape[0])
+    rads = max_radius * np.linspace(0,1,img.shape[0])*pixel_size_kpc
     angs = np.linspace(0, 2*np.pi, img.shape[1])
 
     return polar, (rads, angs)
 
-def make_moment_profiles(stamps, kernel, label, config, index_sample):
+def make_moment_profiles(stamps, kernel, label, config, index_sample, galaxy_redshifts):
     '''
      Generates radial profiles of transformed maps for m=0, 1, and 2
         
@@ -400,15 +378,29 @@ def make_moment_profiles(stamps, kernel, label, config, index_sample):
     :type config: yaml  
     :return: Saves an hdf5 file containing containing stacked ratios of m1/m0 and m2/m0 and meta data about the sample (if not already included from radial analysis)
     '''
+
+    pixel_scale = config['sz']['pixel_size_arcsec']* u.arcsec #gives us the physical scale of each pixel in the FRB
+    snapshot_redshift = float(config['package_data']['redshift'])
+    radial_bins = np.array(config['sz']['radial_bins'])
+    x_a =  0.5 * (radial_bins[:-1] + radial_bins[1:])
+    cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
+    D_map = cosmo.angular_diameter_distance(snapshot_redshift)
+    pixel_size_kpc = (pixel_scale.to(u.rad).value * D_map).to(u.kpc).value
+    n_gal = len(galaxy_redshifts)
     data0 = []
     data1 = []
     data2 = []
     n=0
-    gauss_kernel = Gaussian2DKernel(kernel) 
-    for i in stamps: 
-        d =convolve_fft(i[0], gauss_kernel)  
-      
-        pol, (rads,angs) = topolar(d)
+    for j in range(len(stamps)): 
+
+        galaxy_redshift = galaxy_redshifts[j%n_gal]
+        D_A = cosmo.angular_diameter_distance(galaxy_redshift).to(u.kpc).value
+        pixel_scale_arcsec = (pixel_size_kpc / D_A * u.rad).to(u.arcsec).value
+        kernel_pixels = kernel/ pixel_scale_arcsec
+        gauss_kernel = Gaussian2DKernel(kernel_pixels) 
+        i = stamps[j]
+        d =convolve_fft(i[0], gauss_kernel)   
+        pol, (rads,angs) = topolar(d, pixel_size_kpc)
         reals0 = []
         imaginaries0 = []
         reals1 = []
@@ -431,12 +423,31 @@ def make_moment_profiles(stamps, kernel, label, config, index_sample):
             imaginaries2.append(np.sum(imag2)/(len(imag2)))
         
         
-        amplitude0 = [np.sqrt(reals0[h]**2+imaginaries0[h]**2) for h in range(len(reals0))]
-        amplitude1 = [np.sqrt(reals1[h]**2+imaginaries1[h]**2) for h in range(len(reals1))]
-        amplitude2 = [np.sqrt(reals2[h]**2+imaginaries2[h]**2) for h in range(len(reals2))]
-        data0.append(amplitude0)
-        data1.append(amplitude1)
-        data2.append(amplitude2)
+        amplitude0 = np.hypot(reals0, imaginaries0)
+        amplitude1 = np.hypot(reals1, imaginaries1)
+        amplitude2 = np.hypot(reals2, imaginaries2)
+
+        amp0_binned = []
+        amp1_binned = []
+        amp2_binned = []
+
+        for i in range(len(radial_bins)-1):
+
+            mask = (rads >= radial_bins[i]) & (rads < radial_bins[i+1])
+
+            if np.any(mask):
+                amp0_binned.append(np.nanmean(amplitude0[mask]))
+                amp1_binned.append(np.nanmean(amplitude1[mask]))
+                amp2_binned.append(np.nanmean(amplitude2[mask]))
+            else:
+                amp0_binned.append(np.nan)
+                amp1_binned.append(np.nan)
+                amp2_binned.append(np.nan)
+
+
+        data0.append(amp0_binned)
+        data1.append(amp1_binned)
+        data2.append(amp2_binned)
         #data.append(profile)
         n+=1
     data_a = list(zip(*data0))
@@ -476,23 +487,21 @@ def make_moment_profiles(stamps, kernel, label, config, index_sample):
         err_b.append(np.std(y_b[i]))
 
 
-    pixel_scale = float(config['sz']['pixel_size_arcsec'])
-    x_a = [(i*pixel_scale)/60 for i in range(len(y_a))] #convert radial profiles from pixel units to arcminutes
-    #Open metadata from config file
     sim_name = str(config['package_data']['sim'])
-    redshift = config['sz']['redshift']
+    redshift = config['package_data']['redshift']
 
     with h5py.File(label+'_szdat.hdf5', 'a') as f: 
         if 'metadata' not in f:
             meta = f.create_group('metadata') 
             meta.attrs['simulation'] = sim_name
             meta.attrs['redshift']  = str(redshift)
-            meta.attrs['galaxy_indices']=np.array(index_sample)
+            meta.create_dataset('galaxy_indices', data=np.array(index_sample))
+            meta.create_dataset('galaxy_redshifts', data=np.array(galaxy_redshifts))  
         if 'moment_profiles' in f:
             del f['moment_profiles']
         rad = f.create_group('moment_profiles')
         rad.create_dataset('radius', data=np.array(x_a))
-        rad['radius'].attrs['units'] = 'Arcminutes'
+        rad['radius'].attrs['units'] = 'kpc'
         rad.create_dataset('moment_1', data=np.array(m_a))
         rad['moment_1'].attrs['units'] = ''
         rad.create_dataset('m1_error', data=np.array(err_a))
@@ -506,24 +515,18 @@ def make_moment_profiles(stamps, kernel, label, config, index_sample):
 
 """THERMAL ENERGY"""
 
-def thermal_energy(stamps, kernel, label, aperture, comov, z, theta, gal_sample_indices, config):
+def thermal_energy(stamps, kernel, label, aperture, config, gal_sample_indices, galaxy_redshifts):
     """
-    Calculates the thermal energy in a given aperature from maps of SZ-y data
+    Calculates the thermal energy in a given aperture from maps of SZ-y data
         
     :param stamps: A nested array of the SZ data around galaxies.
     :type stamps: list[float]
-    :param kernel: The standard deviation of the Gaussian kernel in units of pixels
+    :param kernel: The standard deviation of the Gaussian kernel in units of arcseconds
     :type kernel: float
     :param label: File name and path to save outputs
     :type label: str
     :param aperture: pixel size of the radius of the aperture within which you want to caculate thermal energy
     :type aperture: float
-    :param comov: comoving distance in Gpc
-    :type comov: float
-    :param z: Redshift of snapshot
-    :type z: float
-    :param theta: pixel size in arcseconds
-    :type theta: float
     :param gal_sample_indices: indices of the galaxies in the catalog used to creat the stamps
     :type gal_sample_indices: list[float]
     :param config: input yaml files
@@ -531,13 +534,24 @@ def thermal_energy(stamps, kernel, label, aperture, comov, z, theta, gal_sample_
     :return: Saves an hdf5 file containing thermal energy as a function of stellar and halo mass and meta data about the sample (if not already included from radial analysis)
 
     """
-
-    gauss_kernel = Gaussian2DKernel(kernel) 
-    energies = []
-    for i in stamps:
-        image= convolve_fft(i[0], gauss_kernel)
+    pixel_scale = config['sz']['pixel_size_arcsec']* u.arcsec #gives us the physical scale of each pixel in the FRB
+    snapshot_redshift = float(config['package_data']['redshift'])
+    cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
+    D_map = cosmo.angular_diameter_distance(snapshot_redshift)
+    pixel_size_kpc = (pixel_scale.to(u.rad).value * D_map).to(u.kpc).value
+    n_gal=len(galaxy_redshifts)
+    therm=[]
+    for j in range(len(stamps)): 
+        galaxy_redshift = galaxy_redshifts[j%n_gal]
+        D_A = cosmo.angular_diameter_distance(galaxy_redshift).to(u.kpc).value
+        pixel_scale_arcsec = (pixel_size_kpc / D_A * u.rad).to(u.arcsec).value
+        kernel_pixels = kernel/ pixel_scale_arcsec
+        gauss_kernel = Gaussian2DKernel(kernel_pixels) 
+        i = stamps[j]
+        image =convolve_fft(i[0], gauss_kernel)    
         y, x = np.indices(image.shape)
-        
+
+        aperture_pixels = aperture/pixel_scale_arcsec
         center = np.array([(x.max()-x.min())/2.0+1, (x.max()-x.min())/2.0+1]) #+1 added because rounding down below
         r = np.hypot(x - center[0], y - center[1]) #np.hypot gives the hypotenuse of a triangle with the given legs
         # Get sorted radii
@@ -549,18 +563,17 @@ def thermal_energy(stamps, kernel, label, aperture, comov, z, theta, gal_sample_
 
         new_r_int=[]
         for i in r_int:
-            if i<= aperture:
+            if i<= aperture_pixels:
                 new_r_int.append(i)
 
         l = len(new_r_int)
         i_sorted_new = i_sorted[0:l]
         total = np.sum(i_sorted_new)
-        energies.append(total)
+        comov = cosmo.comoving_distance(float(galaxy_redshift)).to(u.Gpc).value 
+        therm.append(2.9 * (comov/(1+galaxy_redshift))**2 * (total*(pixel_scale_arcsec/60)**2)/(10**(-6)))
     
-    therm = []
-    for i in energies:
-        therm.append(2.9 * (comov/(1+z))**2 * (i*(theta/60)**2)/(10**(-6)))
-    redshift = str(config['sz']['redshift'])
+
+    redshift = str(config['package_data']['redshift'])
     sim_name = config['package_data']['sim']
     if sim_name=='EAGLE':
         #Load RAFIKI-CGM galaxy catalog
@@ -580,25 +593,27 @@ def thermal_energy(stamps, kernel, label, aperture, comov, z, theta, gal_sample_
     y,err,y2,err2 = make_thermal_energy_plot(combined_data, thresholds_stellar, thresholds_halo)
 
     sim_name = str(config['package_data']['sim'])
-    redshift = config['sz']['redshift']
-    
+    redshift = config['package_data']['redshift']
+    thresholds_stellar=np.array(thresholds_stellar)
+    thresholds_halo=np.array(thresholds_halo)
+    x_stellar =  0.5 * (thresholds_stellar[:-1] + thresholds_stellar[1:])
+    x_halo=  0.5 * (thresholds_halo[:-1] + thresholds_halo[1:])
     with h5py.File(label+'_szdat.hdf5', 'a') as f: 
         if 'metadata' not in f:
             meta = f.create_group('metadata') 
             meta.attrs['simulation'] = sim_name
             meta.attrs['redshift']  = str(redshift)
-            meta.attrs['galaxy_indices']=np.array(gal_sample_indices)
-            therm_cuts = f.create_group('metadata/therm_cuts')
-            therm_cuts.attrs['radius']=aperture
+            meta.create_dataset('galaxy_indices', data=np.array(gal_sample_indices))
+            meta.create_dataset('galaxy_redshifts', data=np.array(galaxy_redshifts))  
         if 'metadata/therm_cuts' not in f:
             therm_cuts = f.create_group('metadata/therm_cuts')
             therm_cuts.attrs['radius']=aperture
         if 'thermal_energy' in f:
             del f['thermal_energy']
         rad = f.create_group('thermal_energy')
-        rad.create_dataset('stellar_mass', data=np.array(thresholds_stellar[1:-1]))
+        rad.create_dataset('stellar_mass', data=np.array(x_stellar))
         rad['stellar_mass'].attrs['units'] = 'Solar'
-        rad.create_dataset('halo_mass', data=np.array(thresholds_halo[1:-1]))
+        rad.create_dataset('halo_mass', data=np.array(x_halo))
         rad['halo_mass'].attrs['units'] = 'Solar'
         rad.create_dataset('thermal_stellar', data=np.array(y))
         rad['thermal_stellar'].attrs['units'] = '10^60 ergs'
