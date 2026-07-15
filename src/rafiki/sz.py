@@ -271,7 +271,7 @@ def make_stacked_images(stamps, kernel, label,config, index_sample, galaxy_redsh
     print(stacked_image)
     sim_name = str(config['package_data']['sim'])
     redshift = config['package_data']['redshift']
-     with h5py.File(label+'_szdat.hdf5', 'a') as f: 
+    with h5py.File(label+'_szdat.hdf5', 'a') as f: 
         if 'metadata' not in f:
             meta = f.create_group('metadata') 
             meta.attrs['simulation'] = sim_name
