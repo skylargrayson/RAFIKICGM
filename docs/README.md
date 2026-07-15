@@ -10,14 +10,14 @@ Features
 --------
 - Generate thermal Sunyaev-Zeldovich data products including:
         
-        - Radial profiles of the Compton-y parameter
-        - Radial profiles of the moments of symmetry for the Compton-y parameter maps (extracting information about anisotropies in the data)
-        - Stacks of thermal energy around galaxies as a function of stellar and halo mass. 
+     - Radial profiles of the Compton-y parameter
+     - Radial profiles of the moments of symmetry for the Compton-y parameter maps (extracting information about anisotropies in the data)
+     - Stacks of thermal energy around galaxies as a function of stellar and halo mass. 
 
 - Generate soft X-ray emission data products including:
 
-        - Radial profiles of stacked X-ray surface brightness
-        - Radial profiles of the moments of symmetry for the surface brightness maps
+     - Radial profiles of stacked X-ray surface brightness
+     - Radial profiles of the moments of symmetry for the surface brightness maps
 
 - Immense user flexibility in galaxy sample, including matching distributions from input catalog, setting limits by galaxy property, and selecting data from a range of snapshot redshifts
 
