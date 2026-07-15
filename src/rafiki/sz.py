@@ -266,9 +266,7 @@ def make_stacked_images(stamps, kernel, label,config, index_sample, galaxy_redsh
         i = stamps[j]
         dd =convolve_fft(i[0], gauss_kernel)     
         convolved_stamps.append(dd)
-    print(convolved_stamps)
-    stacked_image = np.mean( np.array(convolved_stamps), axis=0)   
-    print(stacked_image)
+    image_dat = np.mean( np.array(convolved_stamps), axis=0)   
     sim_name = str(config['package_data']['sim'])
     redshift = config['package_data']['redshift']
     with h5py.File(label+'_szdat.hdf5', 'a') as f: 
@@ -282,7 +280,7 @@ def make_stacked_images(stamps, kernel, label,config, index_sample, galaxy_redsh
         if 'image' in f:
             del f['image']
         stacked_image = f.create_group('image')
-        stacked_image.create_dataset('image_dat', data=np.array(stacked_image))
+        stacked_image.create_dataset('image_dat', data=np.array(image_dat))
 
 
 
