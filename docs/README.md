@@ -1,34 +1,25 @@
-RAFIKI
-======
+RAFIKI-CGM
+==========
 📖 Documentation: https://rafikicgm.readthedocs.io/
 
-RAFIKI (Realizing AGN Feedback in Keyframe Images) is an open-source python package developed to analyze
-simulated microwave and X-ray data. In its current form, it can be used to generate and stack tSZ images
-from raw hdf5 files from SIMBA or any other GIZMO-based code.
+RAFIKI-CGM is an open-source python package developed to analyze simulated microwave and X-ray data. In its current form, it consists of a database with maps from 11 simulations
+and the ability to generate stacked data products for easy comparison against tSZ and soft X-ray observations. 
+
 
 Features
 --------
--Create stacked images of Compton-y parameter around galaxies with properties of your choosings
+- Generate thermal Sunyaev-Zeldovich data products including:
+        
+        - Radial profiles of the Compton-y parameter
+        - Radial profiles of the moments of symmetry for the Compton-y parameter maps (extracting information about anisotropies in the data)
+        - Stacks of thermal energy around galaxies as a function of stellar and halo mass. 
 
--Generate radial profiles of the Compton-y parameter and moment analyses of asymmetries
+- Generate soft X-ray emission data products including:
 
--Calculate the total thermal energy in an aperature of your choosing and plot against stellar or halo mass
+        - Radial profiles of stacked X-ray surface brightness
+        - Radial profiles of the moments of symmetry for the surface brightness maps
 
-
-
-Installation
-------------
-
-Use
----
-At it's base, RAFIKI's functionality is contained in three steps:
-        1) Generate maps of tSZ signal from raw hdf5 files
-        2) Analyze tSZ maps to extract radial profiles and thermal energy measurements around galaxy
-        populations of your choosing
-        3) Visualize your data by comparing a range of models and redshifts
-
-Each of these steps is run individually with several user input parameters.
-
+- Immense user flexibility in galaxy sample, including matching distributions from input catalog, setting limits by galaxy property, and selecting data from a range of snapshot redshifts
 
 
 
