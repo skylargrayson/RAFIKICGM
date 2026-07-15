@@ -6,7 +6,7 @@ and specific settings regarding instrument simulation, galaxy samples, and where
 
 .. code-block:: bash
 	
-	python run_pipeline.py --config config.yaml
+	rafiki --config config.yaml
 
 
 Configuration File
@@ -129,7 +129,7 @@ This section points to where the maps and galaxy catalogs are saved and allows y
 	*str* - Name of the simulation you want to use to generate the mock data. Either ``SIMBA``, ``EAGLE``, or ``RAFIKI_A-I``. See :ref:`sim_options` to understand the differences
 
 ``package_data.redshift``
-	*float* - Redshift of the snapshot you wish to analyse. Options are 0.1, 0.5, 1, and 2 for tSZ analysis. If doing X-ray analysis, currently only 0.1 is supported/
+	*float* - Redshift of the snapshot you wish to analyse. Options are 0.1, 0.5, 1, and 2 for tSZ analysis. If doing X-ray analysis, currently only 0.1 is supported.
 
 Analysis Selection
 ^^^^^^^^^^^^^^^^^^^^

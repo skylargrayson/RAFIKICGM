@@ -16,7 +16,6 @@ readme = "README.md"
 
 requires-python = ">=3.10"
 
-license = {file = "LICENSE"}
 
 authors = [
     {name = "Skylar Grayson", email = "sigrayso@asu.edu"},
@@ -51,17 +50,21 @@ classifiers = [
 dependencies = [
     "numpy",
     "scipy",
+    "pandas",
     "matplotlib",
     "astropy",
     "yt",
-    "caesar",
     "h5py",
     "PyYAML",
-    "tqdm",
-    "pyXSIM",
-    "SOXS"
+    "tqdm"
 ]
 
+[project.optional-dependencies]
+xray = [
+    "yt",
+    "pyxsim",
+    "soxs",
+]
 
 
 [project.urls]

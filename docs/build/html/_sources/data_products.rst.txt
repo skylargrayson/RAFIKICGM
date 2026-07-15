@@ -16,7 +16,7 @@ For each simulation snapshot, a 2D map of the Compton-y parameter is generated. 
 (FRB) functionality, such that each pixel has a width corresponding to 3 arcseconds at the redshift of the snapshot. (If you generate your own
 map, be sure to update ``sz.pixel_size_arcsec`` in the configuration file). If galaxies are desired to be simulated at a range of redshifts (see :doc:`galaxy_selection`) this scale will be adjusted internally in the pipeline prior to convolving with a Gaussian beam. 
 
-.. figure:: ../_static/images/comptonymaps.png
+.. figure:: ./_static/images/comptonymaps.png
     :width: 100%
 
     Compton-y maps that come with RAFIKI-CGM. Here we see the RAFIKI-A simulation at z=1, projected in the x (left), y (center), and z (right) directions. To generate data products,

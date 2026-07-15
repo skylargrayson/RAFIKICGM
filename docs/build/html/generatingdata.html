@@ -37,11 +37,14 @@
             
   <section id="dev-generating-your-own-maps">
 <h1>Dev: Generating Your Own Maps<a class="headerlink" href="#dev-generating-your-own-maps" title="Permalink to this heading">¶</a></h1>
-<p>RAFIKI-CGM automatically includes the necessary data products for 9 RAFIKI simulations, SIMBA, EAGLE, and EAGLE-AGNdT9. However, the package
-does include pipelines needed for generating your own data products from other simulations. In its current form, these are limited to SIMBA and EAGLE runs.</p>
-<section id="tsz">
-<h2>tSZ<a class="headerlink" href="#tsz" title="Permalink to this heading">¶</a></h2>
-<p>You can use RAFIKI-CGM to create a map of the Compton-y parameter projected along a snapshot box. This converts the particle data to a two-dimensional pixelated map of the Compton-y parameter, defined as <span class="math notranslate nohighlight">\(y = \sigma_T \int dl \ n_e \frac{k(T_e-T_{CMB})}{m_e c^2}\)</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This page is out of date and will be updated shortly.</p>
+</div>
+<p>RAFIKI-CGM automatically includes the necessary data products for 9 RAFIKI simulations, SIMBA, and EAGLE.
+tSZ
+—
+You can use RAFIKI-CGM to create a map of the Compton-y parameter projected along a snapshot box. This converts the particle data to a two-dimensional pixelated map of the Compton-y parameter, defined as <span class="math notranslate nohighlight">\(y = \sigma_T \int dl \ n_e \frac{k(T_e-T_{CMB})}{m_e c^2}\)</span>
 This is done via the generating_sz_data function and a full routine can be found in making_sz_maps.py. Here we briefly explain the inputs</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;snap_m50n512_105.hdf5&#39;</span>
 <span class="n">output_name</span> <span class="o">=</span> <span class="s1">&#39;SIMBA_z1&#39;</span>
@@ -55,7 +58,6 @@ This is done via the generating_sz_data function and a full routine can be found
 <li><p><strong>z</strong> - redshift corresponding to the snapshot. Deriving the Compton-y parameter from pressure fields as done here is redshift dependent.</p></li>
 <li><p><strong>theta</strong> - Angular resolution you want your map to have in units of arcseconds. Default and the value used to generate the RAFIKI-CGM package maps is 3”.</p></li>
 </ul>
-</section>
 <section id="x-ray">
 <h2>X-ray<a class="headerlink" href="#x-ray" title="Permalink to this heading">¶</a></h2>
 </section>
@@ -98,12 +100,12 @@ This is done via the generating_sz_data function and a full routine can be found
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulations.html">Simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_products.html">Pre-Made Data Products</a></li>
 <li class="toctree-l1"><a class="reference internal" href="running.html">Running RAFIKI-CGM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="galaxy_selection.html">Galaxy Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="galaxy_selection.html">Generating a Mock Galaxy Catalog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="outputs.html">Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cookbook/index.html">Cookbooks</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Dev: Generating Your Own Maps</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#tsz">tSZ</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#x-ray">X-ray</a></li>
 </ul>
 </li>

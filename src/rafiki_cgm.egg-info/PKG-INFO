@@ -20,12 +20,14 @@ Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 Requires-Dist: numpy
 Requires-Dist: scipy
+Requires-Dist: pandas
 Requires-Dist: matplotlib
 Requires-Dist: astropy
 Requires-Dist: yt
-Requires-Dist: caesar
 Requires-Dist: h5py
 Requires-Dist: PyYAML
 Requires-Dist: tqdm
-Requires-Dist: pyXSIM
-Requires-Dist: SOXS
+Provides-Extra: xray
+Requires-Dist: yt; extra == "xray"
+Requires-Dist: pyxsim; extra == "xray"
+Requires-Dist: soxs; extra == "xray"

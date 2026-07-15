@@ -38,12 +38,477 @@
 <p>Here you will find reference to the specific functions used in the RAFIKI-CGM pacakge.</p>
 <section id="pipeline-py">
 <h2>pipeline.py<a class="headerlink" href="#pipeline-py" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.pipeline.select_galaxies">
+<span class="sig-prename descclassname"><span class="pre">rafiki.pipeline.</span></span><span class="sig-name descname"><span class="pre">select_galaxies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.pipeline.select_galaxies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects an analog galaxy sample and assigns redshifts to each galaxy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – input yaml file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>gal_sample_indices-Array of selected galaxy catalog indices</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>galaxy_redshifts-Array of redshifts for mock observation for each galaxy in the catalog</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.pipeline.run_sz">
+<span class="sig-prename descclassname"><span class="pre">rafiki.pipeline.</span></span><span class="sig-name descname"><span class="pre">run_sz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gal_sample_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galaxy_redshifts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.pipeline.run_sz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates SZ data products</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – input yaml file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.pipeline.run_xray">
+<span class="sig-prename descclassname"><span class="pre">rafiki.pipeline.</span></span><span class="sig-name descname"><span class="pre">run_xray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gal_sample_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galaxy_redshifts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.pipeline.run_xray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates X-ray data products</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – input yaml file</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="catalog-py">
 <h2>catalog.py<a class="headerlink" href="#catalog-py" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.catalog.select_by_ranges">
+<span class="sig-prename descclassname"><span class="pre">rafiki.catalog.</span></span><span class="sig-name descname"><span class="pre">select_by_ranges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.catalog.select_by_ranges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the parameters for generating a mock galaxy sample catalog, used only if selection.method is set to range</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – input yaml files</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>index_sample-array of galaxy indices in the RAFIKI-CGM catalog file that will be used for our mock galaxy sample</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.catalog.select_by_matching">
+<span class="sig-prename descclassname"><span class="pre">rafiki.catalog.</span></span><span class="sig-name descname"><span class="pre">select_by_matching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.catalog.select_by_matching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the galaxy sample catalog from the observations, used only if selection.method is set to matching</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – input yaml file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Indices for galaxy sample selected to match the observed distribution</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.catalog.load_catalog">
+<span class="sig-prename descclassname"><span class="pre">rafiki.catalog.</span></span><span class="sig-name descname"><span class="pre">load_catalog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redshift</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.catalog.load_catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the catalog of mock galaxy properties for comparison</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – input yaml files</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>stell-Array of galaxy stellar masses (solar units)</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>halo-Array of galaxy halo masses (solar units)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>rad-Array of galaxy virial radii (kpc)</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>age-Array of galaxy ages (Gyr)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>sfr-Array of galaxy star formation rates (solar units/yr)</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ssfr-Array of galaxy specific star formation rates (Gyr^-1)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>frb_locs-Array of galaxy locations in tSZ FRB map (pixel units)</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>central-Boolean flag if galaxies are central in their halo</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="sz-py">
 <h2>sz.py<a class="headerlink" href="#sz-py" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.determining_frb_size">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">determining_frb_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angular_res</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.determining_frb_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells you how many pixels you want in your image for a given angular resolution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>box_size</strong> (<em>float</em>) – Size of the box in units of Mpccm/h</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – redshift of your snapshot</p></li>
+<li><p><strong>comov</strong> (<em>float</em>) – Comoving distance in kpc. Suggested to use Ned Wright’s cosmology calculator to determine</p></li>
+<li><p><strong>angular_res</strong> (<em>float</em>) – The angular size of each pixel you want in your frb in units of arcseconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>How many pixels you want to make your frb to achieve the desired angular resolution</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.cut_stamps">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">cut_stamps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_sample</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.cut_stamps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cut out stamps of Compton-y map around every galaxy in the sample. Return nested array of the stamps</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>yaml</em>) – input yaml file</p></li>
+<li><p><strong>index_sample</strong> (<em>np.ndarray</em>) – array of galaxy indices in the RAFIKI-CGM catalog file that will be used for our mock galaxy sample</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>stamps-nested array of 2D stamps centered around each galaxy of interest</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.cropping_sz_x">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">cropping_sz_x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sz_dat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.cropping_sz_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a nested 2D array of SZ data in the regions around our sampled galaxies using a data box projected in the x-direction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sz_dat</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – 2D array of projected Compton-y map</p></li>
+<li><p><strong>xs</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – x-coordinates of locations of galaxies in your box, adjusted to match the pixel frb</p></li>
+<li><p><strong>ys</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – y-coordinates of locations of galaxies in your box, adjusted to match the pixel frb</p></li>
+<li><p><strong>zs</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – z-coordinates of locations of galaxies in your box, adjuste to match the pixel frb</p></li>
+<li><p><strong>sample</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – list of index locations of the galaxies we want to sample (output of <code class="docutils literal notranslate"><span class="pre">sorting</span></code>)</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – the pixel size we want to crop around the galaxies</p></li>
+<li><p><strong>frb</strong> (<em>int</em>) – pixel size of the SZ data used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lists-Nested array of SZ data for the regions around our sample gaalxies</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.cropping_sz_y">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">cropping_sz_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sz_dat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.cropping_sz_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a nested 2D array of SZ data in the regions around our sampled galaxies using a data box projected in the y-direction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sz_dat</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – 2D array of projected Compton-y map</p></li>
+<li><p><strong>xs</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – x-coordinates of locations of galaxies in your box, adjusted to match the pixel frb</p></li>
+<li><p><strong>ys</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – y-coordinates of locations of galaxies in your box, adjusted to match the pixel frb</p></li>
+<li><p><strong>zs</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – z-coordinates of locations of galaxies in your box, adjuste to match the pixel frb</p></li>
+<li><p><strong>sample</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – list of index locations of the galaxies we want to sample (output of <code class="docutils literal notranslate"><span class="pre">sorting</span></code>)</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – the pixel size we want to crop around the galaxies</p></li>
+<li><p><strong>frb</strong> (<em>int</em>) – pixel size of the SZ data used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lists-Nested array of SZ data for the regions around our sample gaalxies</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.cropping_sz_z">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">cropping_sz_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sz_dat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.cropping_sz_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a nested 2D array of SZ data in the regions around our sampled galaxies using a data box projected in the z-direction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sz_dat</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – 2D array of projected Compton-y map</p></li>
+<li><p><strong>xs</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – x-coordinates of locations of galaxies in your box, adjusted to match the pixel frb</p></li>
+<li><p><strong>ys</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – y-coordinates of locations of galaxies in your box, adjusted to match the pixel frb</p></li>
+<li><p><strong>zs</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – z-coordinates of locations of galaxies in your box, adjuste to match the pixel frb</p></li>
+<li><p><strong>sample</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – list of index locations of the galaxies we want to sample (output of <code class="docutils literal notranslate"><span class="pre">sorting</span></code>)</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – the pixel size we want to crop around the galaxies</p></li>
+<li><p><strong>frb</strong> (<em>int</em>) – pixel size of the SZ data used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>lists-Nested array of SZ data for the regions around our sample gaalxies</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.azimuthalAverage">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">azimuthalAverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.azimuthalAverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the azimuthally averaged radial profile. Taken from with some alterations <a class="reference external" href="https://github.com/mkolopanis/python/blob/master/radialProfile.py">https://github.com/mkolopanis/python/blob/master/radialProfile.py</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – 2D array of projected Compton-y map around our galaxy of interest</p></li>
+<li><p><strong>center</strong> (<em>list</em><em>[</em><em>float</em><em>] or </em><em>None</em>) – The [x,y] pixel coordinates used as the center. Default is None, which useds the center of the image</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>radial_prof-Radial profile of the azimuthally averaged signal</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.make_radial_profiles">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">make_radial_profiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stamps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galaxy_redshifts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.make_radial_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convolves data and generates radial profiles for all galaxies in your sample</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stamps</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – A nested array of the SZ data around galaxies. Output of <code class="docutils literal notranslate"><span class="pre">cropping_sz</span></code> function</p></li>
+<li><p><strong>kernel</strong> (<em>float</em>) – The standard deviation of the Gaussian kernel in units of arcseconds</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – File name and path to save outputs</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – input yaml files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Saves an hdf5 file containing containing stacked radial profile and meta data about the sample</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.topolar">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">topolar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_size_kpc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.topolar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms an image into polar coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – 2D data of the image wanting to transform</p></li>
+<li><p><strong>order</strong> (<em>int</em>) – The spline interpolation order, default 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Polar-Nested array of image by polar coordinates, (rads, angs)- Values of the radii and angles corresponding to the data in polar</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.make_moment_profiles">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">make_moment_profiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stamps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galaxy_redshifts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.make_moment_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Generates radial profiles of transformed maps for m=0, 1, and 2</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stamps</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – A nested array of the SZ data around galaxies. Output of <code class="docutils literal notranslate"><span class="pre">cropping_sz</span></code> function</p></li>
+<li><p><strong>kernel</strong> (<em>float</em>) – The standard deviation of the Gaussian kernel in units of pixels</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – File name and path to save outputs</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – input yaml files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Saves an hdf5 file containing containing stacked ratios of m1/m0 and m2/m0 and meta data about the sample (if not already included from radial analysis)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.thermal_energy">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">thermal_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stamps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aperture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gal_sample_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galaxy_redshifts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.thermal_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the thermal energy in a given aperture from maps of SZ-y data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stamps</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – A nested array of the SZ data around galaxies.</p></li>
+<li><p><strong>kernel</strong> (<em>float</em>) – The standard deviation of the Gaussian kernel in units of arcseconds</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – File name and path to save outputs</p></li>
+<li><p><strong>aperture</strong> (<em>float</em>) – pixel size of the radius of the aperture within which you want to caculate thermal energy</p></li>
+<li><p><strong>gal_sample_indices</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – indices of the galaxies in the catalog used to creat the stamps</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – input yaml files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Saves an hdf5 file containing thermal energy as a function of stellar and halo mass and meta data about the sample (if not already included from radial analysis)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.make_thermal_energy_plot">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">make_thermal_energy_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds_stellar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresholds_halo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.make_thermal_energy_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates data and error on thermal energy values for stacked galaxies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Nested list containing stellar masses of galaxies, halo masses of galaxies, and thermal energy around each galaxy</p></li>
+<li><p><strong>thresholds_stellar</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Bin limits for stacking by stellar mass</p></li>
+<li><p><strong>thresholds_halo</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Bin limits for stacking by halo mass</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>y-Thermal energy of stacked galaxies in each stellar mass bin, err-Error on thermal energy of stacked galaxies in each stellar mass bin, y2$</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.gen_random_indices">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">gen_random_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.gen_random_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a list of indicies by random sampling with replacement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_set</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of values to sample from</p></li>
+<li><p><strong>gen_size</strong> (<em>int</em>) – Length of final resampled list you want</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of length gen_size randomly chosen from index_set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.sz.single_catalog_bootstrap">
+<span class="sig-prename descclassname"><span class="pre">rafiki.sz.</span></span><span class="sig-name descname"><span class="pre">single_catalog_bootstrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boot_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.sz.single_catalog_bootstrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the means of a list of catalogs, useful when determining things like correlation matrices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of pandas tables</p></li>
+<li><p><strong>boot_size</strong> (<em>int</em>) – Sample size</p></li>
+<li><p><strong>loop_size</strong> – How many times to do the bootstrapping</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="xray-py">
+<h2>xray.py<a class="headerlink" href="#xray-py" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.xray.xray_instrument_simulation">
+<span class="sig-prename descclassname"><span class="pre">rafiki.xray.</span></span><span class="sig-name descname"><span class="pre">xray_instrument_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galaxy_redshifts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.xray.xray_instrument_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run through the X-ray pipeline. Creates mock observations, generates radial profiles of surface brigtness and stacks. Also generates stacked images if analysis.xray_stacked_image: true
+Does not return anything, just saves data to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>yaml</em>) – input yaml file</p></li>
+<li><p><strong>index_sample</strong> (<em>np.ndarray</em>) – array of galaxy indices in the RAFIKI-CGM catalog file that will be used for our mock galaxy sample</p></li>
+<li><p><strong>label</strong> (<em>str</em>) – File name and path to save outputs</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="utils-py">
+<h2>utils.py<a class="headerlink" href="#utils-py" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.utils.load_xray_particle_data">
+<span class="sig-prename descclassname"><span class="pre">rafiki.utils.</span></span><span class="sig-name descname"><span class="pre">load_xray_particle_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.utils.load_xray_particle_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpacks RAFIKI-CGM saved particle list data products for use in pyxsim and SOXS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> – Name of hdf5 file containing particle data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>yt loaded particle data ready for use in pyxsim mock X-ray generation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.utils.redshift_resampling">
+<span class="sig-prename descclassname"><span class="pre">rafiki.utils.</span></span><span class="sig-name descname"><span class="pre">redshift_resampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_sample</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.utils.redshift_resampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines redshifts for mock data generation. Currently able to use one redshift for all galaxies, to randomly select from an observed redshift catalog, and to randomly select
+from an observed redshift catalog within stellar mass bins (to account for observational biases)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>yaml</em>) – input yaml file</p></li>
+<li><p><strong>index_sample</strong> (<em>np.ndarray</em>) – array of galaxy indices in the RAFIKI-CGM catalog file that will be used for our mock galaxy sample</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of redshifts for each galaxy in index_sample</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="data-access-py">
+<h2>data_access.py<a class="headerlink" href="#data-access-py" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rafiki.data_access.download_data">
+<span class="sig-prename descclassname"><span class="pre">rafiki.data_access.</span></span><span class="sig-name descname"><span class="pre">download_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remotepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rafiki.data_access.download_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads the relevant data file from Cloudflare if it is not already saved</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>yaml</em>) – input yaml file</p></li>
+<li><p><strong>remotepath</strong> (<em>string</em>) – path to file for download</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>path to downloaded file</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -94,6 +559,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#pipeline-py">pipeline.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#catalog-py">catalog.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sz-py">sz.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#xray-py">xray.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utils-py">utils.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-access-py">data_access.py</a></li>
 </ul>
 </li>
 </ul>

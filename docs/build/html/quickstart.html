@@ -39,13 +39,10 @@
 <p>This page walks you from installation to your first mock observations using RAFIKI-CGM.</p>
 <section id="install">
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>rafikicgm
-</pre></div>
-</div>
-<p>Or, to install the latest development version from source:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/skylargrayson/RAFIKICGM.git
-<span class="nb">cd</span><span class="w"> </span>RAFIKICGM
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<blockquote>
+<div><p>You can install the latest development version from source:</p>
+</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/skylargrayson/RAFIKICGM.git
 </pre></div>
 </div>
 <p>RAFIKI-CGM is a python-based code requiring the following packages, which should be automatically installed by pip.</p>
@@ -56,10 +53,10 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li><p><a class="reference external" href="https://www.astropy.org/">Astropy</a></p></li>
 <li><p><a class="reference external" href="https://www.h5py.org/">h5py</a></p></li>
 <li><p><a class="reference external" href="https://matplotlib.org/">matplotlib</a></p></li>
-<li><p><a class="reference external" href="https://cython.org/">cython</a></p></li>
-<li><p><a class="reference external" href="https://pypi.org/project/psutil/">psutil</a></p></li>
-<li><p><a class="reference external" href="https://joblib.readthedocs.io/en/stable/">joblib</a></p></li>
 <li><p><a class="reference external" href="https://caesar.readthedocs.io/en/latest/getting_started.html#">caesar</a></p></li>
+</ul>
+<p>If you want to use RAFIKI-CGM for X-ray analysis, you will also need</p>
+<ul class="simple">
 <li><p><a class="reference external" href="https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/index.html">pyXSIM</a></p></li>
 <li><p><a class="reference external" href="https://hea-www.cfa.harvard.edu/soxs/">SOXS</a></p></li>
 </ul>
@@ -93,7 +90,7 @@ A complete, working config is given in the examples directory of the github and 
 <h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Learn more in <a class="reference internal" href="overview.html"><span class="doc">Overview</span></a></p></li>
-<li><p>Walk through a full example in <span class="xref std std-doc">cookbook</span></p></li>
+<li><p>Walk through a full example in <a class="reference internal" href="cookbook/index.html"><span class="doc">Cookbooks</span></a></p></li>
 <li><p>See every config option in <a class="reference internal" href="running.html"><span class="doc">Running RAFIKI-CGM</span></a></p></li>
 </ul>
 </section>

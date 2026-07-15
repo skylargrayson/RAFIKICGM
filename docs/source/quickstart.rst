@@ -6,17 +6,12 @@ This page walks you from installation to your first mock observations using RAFI
 Install
 -------
  
+ You can install the latest development version from source: 
+
 .. code-block:: bash
  
-   pip install rafikicgm
+   pip install git+https://github.com/skylargrayson/RAFIKICGM.git
  
-Or, to install the latest development version from source:
- 
-.. code-block:: bash
- 
-   git clone https://github.com/skylargrayson/RAFIKICGM.git
-   cd RAFIKICGM
-   pip install -e .
  
 RAFIKI-CGM is a python-based code requiring the following packages, which should be automatically installed by pip. 
 
@@ -26,10 +21,11 @@ RAFIKI-CGM is a python-based code requiring the following packages, which should
 - `Astropy <https://www.astropy.org/>`_ 
 - `h5py <https://www.h5py.org/>`_
 - `matplotlib <https://matplotlib.org/>`_ 
-- `cython <https://cython.org/>`_ 
-- `psutil <https://pypi.org/project/psutil/>`_ 
-- `joblib <https://joblib.readthedocs.io/en/stable/>`_ 
 - `caesar <https://caesar.readthedocs.io/en/latest/getting_started.html#>`_ 
+
+
+If you want to use RAFIKI-CGM for X-ray analysis, you will also need 
+
 - `pyXSIM <https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/index.html>`_ 
 - `SOXS <https://hea-www.cfa.harvard.edu/soxs/>`_
 
@@ -73,5 +69,5 @@ Next Steps
 ----------
 
 * Learn more in :doc:`overview`
-* Walk through a full example in :doc:`cookbook`
+* Walk through a full example in :doc:`cookbook/index`
 * See every config option in :doc:`running`

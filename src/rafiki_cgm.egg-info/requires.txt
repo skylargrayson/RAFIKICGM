@@ -1,11 +1,14 @@
 numpy
 scipy
+pandas
 matplotlib
 astropy
 yt
-caesar
 h5py
 PyYAML
 tqdm
-pyXSIM
-SOXS
+
+[xray]
+yt
+pyxsim
+soxs

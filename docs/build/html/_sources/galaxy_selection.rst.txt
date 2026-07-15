@@ -62,3 +62,8 @@ Once galaxies are selected, they are each assigned a redshift for mock observati
     - ``selection.redshift_sampling.z_column`` - Column corresponding to the redshift data in the linked file
     - ``selection.redshift_sampling.mass_column`` - Column corresponding to the stellar mass data in the linked file
     - ``selection.redshift_sampling.mass_bins`` - Mass bin edges used for matching distribution
+
+
+It is worth noting that the ways in which galaxy sample redshifts are incorporated are very different in the tSZ and X-ray pipelines. In the X-ray pipeline, the redshift is taken into account when 
+generating photons both in terms of photon energies changing and the distance of the observation impacting psf. The tSZ data, the redshift is only used to determine the scale of the convolving beam as the actual 
+Compton-y parameter is independent of redshift. 

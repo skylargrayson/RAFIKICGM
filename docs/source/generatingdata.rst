@@ -1,10 +1,10 @@
 Dev: Generating Your Own Maps
 =============================
 
-RAFIKI-CGM automatically includes the necessary data products for 9 RAFIKI simulations, SIMBA, EAGLE, and EAGLE-AGNdT9. However, the package
-does include pipelines needed for generating your own data products from other simulations. In its current form, these are limited to SIMBA and EAGLE runs.
+.. note:: 
+	This page is out of date and will be updated shortly. 
 
-
+RAFIKI-CGM automatically includes the necessary data products for 9 RAFIKI simulations, SIMBA, and EAGLE. 
 tSZ 
 ---
 You can use RAFIKI-CGM to create a map of the Compton-y parameter projected along a snapshot box. This converts the particle data to a two-dimensional pixelated map of the Compton-y parameter, defined as :math:`y = \sigma_T \int dl \ n_e \frac{k(T_e-T_{CMB})}{m_e c^2}` 

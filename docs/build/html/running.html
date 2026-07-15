@@ -38,7 +38,7 @@
 <h1>Running RAFIKI-CGM<a class="headerlink" href="#running-rafiki-cgm" title="Permalink to this heading">¶</a></h1>
 <p>RAFIKI-CGM is running from the command line using a YAML configuration file. This controls all elements of the pipeline including the type of analysis, the simulations you want to use,
 and specific settings regarding instrument simulation, galaxy samples, and where outputs are ssaved. You can run the full pipeline using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>run_pipeline.py<span class="w"> </span>--config<span class="w"> </span>config.yaml
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rafiki<span class="w"> </span>--config<span class="w"> </span>config.yaml
 </pre></div>
 </div>
 <section id="configuration-file">
@@ -104,7 +104,6 @@ and specific settings regarding instrument simulation, galaxy samples, and where
 <span class="c1"># Thermal Sunyaev Zel&#39;dovich settings</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="nt">sz</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">redshift</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                                </span><span class="c1">#0.1, 0.5, 1, or 2</span>
 <span class="w">        </span><span class="nt">pixel_size_arcsec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">       </span><span class="c1">#Angular size of map pixel (arcsec, default=3)</span>
 <span class="w">        </span><span class="nt">stamp_width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span><span class="w">            </span><span class="c1">#Cutout size around each galaxy (arcmin)</span>
 <span class="w">        </span><span class="nt">gaussian_std</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">            </span><span class="c1">#Gaussian beam standard deviation (arcmin)</span>
@@ -117,7 +116,6 @@ and specific settings regarding instrument simulation, galaxy samples, and where
 <span class="c1"># X-ray settings</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="nt">xray</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">redshift</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">               </span><span class="c1">#Snapshot redshift (currently only 0.1 supported)</span>
 <span class="w">        </span><span class="nt">soxs_instrument</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">erosita</span><span class="w">    </span><span class="c1">#Options: erosita | &lt;any SOXS instrument label&gt;</span>
 <span class="w">        </span><span class="nt">exposure_time_ks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w">      </span><span class="c1">#Exposure time (ks)</span>
 <span class="w">        </span><span class="nt">emin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">                   </span><span class="c1">#Minimum energy (keV)</span>
@@ -154,7 +152,7 @@ and specific settings regarding instrument simulation, galaxy samples, and where
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">package_data.sim</span></code></dt><dd><p><em>str</em> - Name of the simulation you want to use to generate the mock data. Either <code class="docutils literal notranslate"><span class="pre">SIMBA</span></code>, <code class="docutils literal notranslate"><span class="pre">EAGLE</span></code>, or <code class="docutils literal notranslate"><span class="pre">RAFIKI_A-I</span></code>. See <a class="reference internal" href="simulations.html#sim-options"><span class="std std-ref">Simulations</span></a> to understand the differences</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">package_data.redshift</span></code></dt><dd><p><em>float</em> - Redshift of the snapshot you wish to analyse. Options are 0.1, 0.5, 1, and 2 for tSZ analysis. If doing X-ray analysis, currently only 0.1 is supported/</p>
+<dt><code class="docutils literal notranslate"><span class="pre">package_data.redshift</span></code></dt><dd><p><em>float</em> - Redshift of the snapshot you wish to analyse. Options are 0.1, 0.5, 1, and 2 for tSZ analysis. If doing X-ray analysis, currently only 0.1 is supported.</p>
 </dd>
 </dl>
 </section>
