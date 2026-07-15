@@ -76,7 +76,7 @@ def run_sz(config, gal_sample_indices, galaxy_redshifts):
         ap_arcsec = config['sz']['thermal_energy']['aperture']*60
         thermal_energy(compton_y_stamps, beam_scale*60, save_to, ap_arcsec, config, gal_sample_indices, galaxy_redshifts) #Will save files as output.directory.label_szdat.hdf5
         print('Completed thermal energy analysis.')
-    if config['analysis']['sz_stacked_image']:
+    if config['analysis']['sz_stacked_image'] and not config['analysis']['sz_radial_profiles']: #image making is included in radial profile pipeline
         print('Beginnning making SZ image...')
         make_stacked_images(compton_y_stamps, beam_scale*60,save_to, config,gal_sample_indices, galaxy_redshifts) #Will save files as output.directory.label_szdat.hdf5
         print('Completed SZ image.')

@@ -339,7 +339,7 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
     #Open metadata from config file
     sim_name = str(config['package_data']['sim'])
     redshift = config['package_data']['redshift']
-    stacked_image = np.mean( np.array(convolved_stamps), axis=0)   
+    image_dat = np.mean( np.array(convolved_stamps), axis=0)   
     with h5py.File(label+'_szdat.hdf5', 'a') as f: 
         if 'metadata' not in f:
             meta = f.create_group('metadata') 
@@ -360,7 +360,7 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
 
         if make_image:
             stacked_image = f.create_group('image')
-            stacked_image.create_dataset('image_dat', data=np.array(stacked_image))
+            stacked_image.create_dataset('image_dat', data=np.array(image_dat))
     return 
 
 
