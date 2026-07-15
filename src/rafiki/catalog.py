@@ -188,10 +188,6 @@ def select_by_matching(config,z):
     
     sim_indices = select_by_ranges(config,z)
 
-    
-
-
-
     sim_prop = np.log10(np.array(property_map[match_by][sim_indices])) #load simulation galaxy sample properties with intial cuts, put in log space
 
     min_bin = max(np.min(obs_prop), np.min(sim_prop))
