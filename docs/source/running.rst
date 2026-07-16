@@ -420,7 +420,6 @@ This benchmark was run on a Apple M2 Ultra with 24 cores and 128 GB of RAM. Runt
    * - Process
      - Walltime
      - Memory Usage
-
    * - Galaxy Selection
      - 0.02 s
      - 300 MB
@@ -438,7 +437,7 @@ This benchmark was run on a Apple M2 Ultra with 24 cores and 128 GB of RAM. Runt
      - 7168 MB
    * - Total 
      - 3864 s (~64 min)
-	 - 
+	 - 7168 MB (max)
 
 .. tip::
 	Runtime scales directly with the sample size. This was ran on 900 galaxies (resampled selection of 300 projected in 3 directions). For 90 galaxies runtimes will be 1/10th as long. 
