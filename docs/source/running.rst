@@ -409,6 +409,39 @@ See :ref:`plotting` for examples on how to read in the output files and visualiz
 Runtime
 -------
 
+Here we provide the approximate wall clock runtime for different stages of the RAFIKI-CGM pipeline with the quickstart configuration settings. 
+
+This benchmark was run on a Apple M2 Ultra with 24 cores and 128 GB of RAM. Runtime will vary with hardware. Currently parallelization is not supported but will be added in future RAFIKI-CGM versions.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 20 20
+
+   * - Process
+     - Walltime
+     - Memory Usage
+
+   * - Galaxy Selection
+     - 0.02 s
+     - 300 MB
+   * - tSZ Radial Profiles and Image Stacking
+     - 110 s
+     - 5890 MB
+   * - tSZ Moment Profiles
+     - 900 s
+     - 6270 MB
+   * - Thermal Energy Scaling
+     - 110 s
+     - 6509 MB
+   * - X-ray Radial Profiles and Image Stacking
+     - 2744 s
+     - 7168 MB
+   * - Total 
+     - 3864 s (~64 min)
+	 - 
+
+.. tip::
+	Runtime scales directly with the sample size. This was ran on 900 galaxies (resampled selection of 300 projected in 3 directions). For 90 galaxies runtimes will be 1/10th as long. 
 
 
 Tips and Common Issues
