@@ -149,7 +149,7 @@ Simulation Selection
 This section points to where the maps and galaxy catalogs are saved and allows you to select the simulation you would like to analyze
 
 ``package_data.path`` 
-	*str* - Path to the directory where RAFIKI-CGM maps and catalogs are saved. (CLOUD ACCESS INFO EVENTUALLY?) 
+	*str* - Path to the directory where RAFIKI-CGM data products will be downloaded (see :doc:`data_products` for more information on storage requirements)
 
 ``package_data.sim``
 	*str* - Name of the simulation you want to use to generate the mock data. Either ``SIMBA``, ``EAGLE``, or ``RAFIKI_A-I``. See :ref:`sim_options` to understand the differences
@@ -245,8 +245,8 @@ Here you identify how you want to generate the mock galaxy catalog and input the
 	*float* - Maximum halo mass cut in solar masses
 	Set to ``null`` to apply no upper limit
 
-.. note:: 
-	While tSZ analysis can be used for any galaxy in the box, X-ray :ref: `event_files` have only been generated for the 500 most massive galaxies in each simulation output. This corresponds 
+.. warning:: 
+	While tSZ analysis can be used for any galaxy in the box, particle data has only been generated for the 500 most massive galaxies in each simulation output. This corresponds 
 	to a minimum stellar mass of ~4.3x10^10, please be conscious of this when choosing ranges. 
 
 ``selection.property_ranges.ssfr_min``
@@ -402,6 +402,11 @@ Visualizing Data
 ----------------
 
 See :ref:`plotting` for examples on how to read in the output files and visualize the results. 
+
+
+
+Runtime
+-------
 
 
 

@@ -28,6 +28,10 @@ Features
         - Immense user flexibility in galaxy sample, including matching distributions from input catalog, setting limits by galaxy property, and selecting data from a range of snapshot redshifts
 
 
+Citing RAFIKI-CGM
+-----------------
+If you use RAFIKI-CGM in a paper, please cite Grayson et al 2026 (in prep.)
+
 Support
 -------
 If you have questions, contact Skylar Grayson sigrayso@asu.edu

@@ -54,6 +54,10 @@ RAFIKI-CGM can be run from the command line:
 
     rafikicgm run quickstart_config.yaml
 
+.. note:: 
+	RAFIKI-CGM downloads pre-made data products for analysis use in a user-specified directory. For the quickstart example provided, 5 GB of
+    data are downloaded, split 3.5 GB for the tSZ data and 1.5 GB for the X-ray data. For more information about data storage requirements and the pre-made data products, see :doc:`data_products`. 
+
 
 Check the Output
 ----------------
@@ -61,7 +65,7 @@ Check the Output
 A successful run will produce 
 
 * ``./outputs/quickstart_szdat.h5`` -- the simulated SZ data 
-* ``./outsputs/quickstart_xraydat.h5`` -- the simulated X-ray data
+* ``./outputs/quickstart_xraydat.h5`` -- the simulated X-ray data
 
 You can examine the structure of these output files in more detail in :doc:`outputs`. 
 
