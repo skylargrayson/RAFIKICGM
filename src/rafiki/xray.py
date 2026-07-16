@@ -193,6 +193,7 @@ def xray_instrument_simulation(config,index_sample, galaxy_redshifts, label):
         )
         err_a.append(bootstrap_ci.standard_error)
     failed_arr = np.array([str(x) for x in failed_runs], dtype='S')
+    x_a =  0.5 * (r_bins[:-1] + r_bins[1:])
     with h5py.File(label+'_xraydat.hdf5', 'a') as f: 
         if 'metadata' in f:
             del f['metadata']
@@ -207,7 +208,7 @@ def xray_instrument_simulation(config,index_sample, galaxy_redshifts, label):
         if 'radial_profile' in f:
                 del f['radial_profile']
         rad = f.create_group('radial_profile')
-        rad.create_dataset('radius', data=np.array(r_bins))
+        rad.create_dataset('radius', data=np.array(x_a))
         rad['radius'].attrs['units'] = 'kpc'
         rad.create_dataset('Sx', data=np.array(y_a))
         rad['Sx'].attrs['units'] = ''

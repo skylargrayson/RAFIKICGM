@@ -22,13 +22,10 @@ RAFIKI-CGM is a python-based code requiring the following packages, which should
 - `h5py <https://www.h5py.org/>`_
 - `matplotlib <https://matplotlib.org/>`_ 
 - `caesar <https://caesar.readthedocs.io/en/latest/getting_started.html#>`_ 
-
-
-If you want to use RAFIKI-CGM for X-ray analysis, you will also need 
-
 - `pyXSIM <https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/index.html>`_ 
 - `SOXS <https://hea-www.cfa.harvard.edu/soxs/>`_
 
+If you do not intend to use RAFIKI-CGM for mock X-ray data, you do not need pyXSIM and SOXS. 
 
 We recommend installing ``yt`` via Anaconda:
 
@@ -42,7 +39,13 @@ Basic Configuration
 -------------------
 
 RAFIKI-CGM is ran from a YAML config file. 
-A complete, working config is given in the examples directory of the github and in :doc:`running`, where every key is also described in detail.
+A complete, working config (``config_quickstart.yaml``) is given in the examples directory of the github and in :doc:`running`, where every key is also described in detail. 
+
+Download the config file and update the following keys:
+
+* ``package_data.path`` -- set to where you want the pre-made data products to be downloaded to (see :doc:`data_products`)
+* ``selection.catalog.path`` and ``selection.redshift_sampling.observational_catalog`` -- download ``erosita_comparison.csv`` from the Examples directory in Github and point to its location
+* ``output.directory`` -- set to where you would like output files to be saved
 
 
 Run the Pipeline
@@ -67,11 +70,43 @@ A successful run will produce
 * ``./outputs/quickstart_szdat.h5`` -- the simulated SZ data 
 * ``./outputs/quickstart_xraydat.h5`` -- the simulated X-ray data
 
-You can examine the structure of these output files in more detail in :doc:`outputs`. 
+You can check that this successfully worked by running 
+
+.. code-block:: python
+
+    import h5py
+
+    with h5py.File("./outputs/quickstart_szdat.h5", "r") as f:
+        print(list(f.keys()))
+
+Output:
+
+.. code-block:: text
+
+    ['image', 'metadata', 'moment_profiles', 'radial_profile', 'thermal_energy']
+
+and 
+
+.. code-block:: python
+
+    import h5py
+
+    with h5py.File("./outputs/quickstart_xraydat.h5", "r") as f:
+        print(list(f.keys()))
+
+Output:
+
+.. code-block:: text
+
+    ['image', 'metadata', 'radial_profile']
+
+
+
+You can examine the structure of these output files in more detail in :doc:`outputs`. For a full walkthrough of loading, plotting, and interpreting these
+outputs, see :doc:`cookbook/szcookbook` and :doc:`cookbook/xraycookbook`. 
 
 Next Steps
 ----------
 
 * Learn more in :doc:`overview`
-* Walk through a full example in :doc:`cookbook/index`
-* See every config option in :doc:`running`
+* Explore changing configuration options :doc:`running`

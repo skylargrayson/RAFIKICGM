@@ -344,7 +344,7 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         if 'metadata' not in f:
             meta = f.create_group('metadata') 
             meta.attrs['simulation'] = sim_name
-            meta.attrs['redshift']  = str(redshift)
+            meta.attrs['snapshot_redshift']  = str(redshift)
             meta.create_dataset('galaxy_indices', data=np.array(index_sample))
             meta.create_dataset('galaxy_redshifts', data=np.array(galaxy_redshifts))  
 
@@ -359,6 +359,8 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         rad['error'].attrs['units'] = ''
 
         if make_image:
+            if 'image' in f:
+                del f['image']
             stacked_image = f.create_group('image')
             stacked_image.create_dataset('image_dat', data=np.array(image_dat))
     return 

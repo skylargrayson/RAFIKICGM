@@ -1,6 +1,8 @@
 import yaml
 import argparse
 from .pipeline import run_sz, run_xray, select_galaxies 
+import time
+from .utils import
 
 def load_config(path):
     with open(path) as f:

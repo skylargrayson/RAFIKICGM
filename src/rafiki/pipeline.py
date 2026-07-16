@@ -5,6 +5,8 @@ from .catalog import  select_by_ranges, select_by_matching
 from .sz import cut_stamps, make_radial_profiles, make_moment_profiles, thermal_energy, make_stacked_images
 from .xray import xray_instrument_simulation
 from .utils import redshift_resampling
+import time
+
 
 def select_galaxies(config):
     '''
@@ -71,6 +73,7 @@ def run_sz(config, gal_sample_indices, galaxy_redshifts):
         print('Beginnning moment profile analysis...')
         make_moment_profiles(compton_y_stamps, beam_scale*60, save_to, config,gal_sample_indices, galaxy_redshifts) #Will save files as output.directory.label_szdat.hdf5
         print('Completed moment profile analysis.')
+        
     if config['analysis']['thermal_energy']:
         print('Beginnning thermal energy analysis...')
         ap_arcsec = config['sz']['thermal_energy']['aperture']*60
@@ -103,9 +106,8 @@ def run_xray(config, gal_sample_indices, galaxy_redshifts):
             return
         else:
             print(f"Overwriting {output_file}")
-
     xray_instrument_simulation(config,gal_sample_indices, galaxy_redshifts, save_to) #Generate instrument simulated files 
-    
+
 
 
     

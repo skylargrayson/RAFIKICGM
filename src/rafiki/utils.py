@@ -195,3 +195,4 @@ def redshift_resampling(config,index_sample):
                 sim_redshifts.append(1)
                 
         return(sim_redshifts)
+    
