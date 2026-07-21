@@ -5,7 +5,6 @@ from .catalog import  select_by_ranges, select_by_matching
 from .sz import cut_stamps, make_radial_profiles, make_moment_profiles, thermal_energy, make_stacked_images
 from .xray import xray_instrument_simulation
 from .utils import redshift_resampling
-import time
 
 
 def select_galaxies(config):

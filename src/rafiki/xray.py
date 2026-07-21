@@ -13,7 +13,7 @@ import glob
 from importlib.resources import files
 from .catalog import load_catalog
 from .instruments import make_erosita
-from .utils import load_xray_particle_data, redshift_resampling
+from .utils import load_xray_particle_data
 from .data_access import download_data
 import traceback
 from pathlib import Path
