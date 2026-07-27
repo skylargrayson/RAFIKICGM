@@ -3,9 +3,9 @@ from astropy.cosmology import FlatLambdaCDM
 import astropy.units as u
 from mapmaking_functions import *
 
-filename = '/Volumes/easystore/2025_Pleiades_Runs/z_1/snap_m50n512_6_1_008.hdf5'
-name = '/Volumes/easystore/RAFIKI_CGM_mock_library/RAFIKI_I/snap_z1/tSZ/RAFIKI_I_1'
-z = 0.5 #redshift of your snapshot
+filename = '/Volumes/easystore/2025_Pleiades_Runs/z_1/snap_m50n512_2_05_008.hdf5'
+name = '/Volumes/easystore/RAFIKI_CGM_mock_library/RAFIKI_F/snap_z1/tSZ/RAFIKI_F_1'
+z = 1 #redshift of your snapshot
 
 
 #Calculate comoving distance in kpc-use basic cosmology

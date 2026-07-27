@@ -104,11 +104,6 @@ ds.add_field(
         units="cm**(-3)",
     )
 
-
-
-
-
-
 radius=1500
 
 def process_galaxy(i):

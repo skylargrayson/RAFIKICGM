@@ -305,6 +305,9 @@ SZ Analysis Parameters
 		pixel_size_arcsec: 3       #default 3 for pre-generated maps
 		stamp_width: 15            #width of square to cut around galaxies in arcminutes. Default 15
 		gaussian_std: 2            #standard deviation of the Gaussian beam in units of arcminutes. Default 2
+		radial_bins: [0, 10, 30, 50, 75, 100, 200, 
+						300,400, 500, 600, 700, 800, 
+						900, 1000, 1100, 1200, 1300, 1400, 1500] #Radial bin edges (kpc)
 		thermal_energy:            
 			aperture: 1              #radius of spherical aperture for calculating thermal energy in units of arcminutes. Default 1
 			stellar_mass_bins: [10.7, 10.9, 11.1, 11.3, 11.5, 11.7, 14.0]   # log10 solar masses
@@ -324,6 +327,9 @@ Here you input the parameters that are relevant for conducting the SZ analysis
 	For ACT use: XX. 
 	For SPT use: XX.
 	For TolTEC use: XX.
+
+``sz.radial_bins``
+	*array* - Radial bin edges for generating surface brightness profile in units of kpc. 
 
 ``sz.thermal_energy.aperture``
 	*float* - Radius of the circular aperture used to calculate thermal energy in units of arcminutes.
@@ -365,7 +371,12 @@ Here you input the parameters that are relevant for conducting the SZ analysis
 	*float* - Maximum photon energy wanted to model in units of keV
 
 ``xray.radial_bins``
-	*array* - Radial bin edges for generating surface brightness profile in units of kpc
+	*array* - Radial bin edges for generating surface brightness profile in units of kpc. 
+
+
+.. warning:: 
+	RAFIKI-CGM v.1 only has particle data extending out to 1500 kpc, so don't use radial bins beyond that. 
+
 
 ``xray.ptsrc_bkgnd``
 	*bool* - Include X-ray point source background in SOXS modelling

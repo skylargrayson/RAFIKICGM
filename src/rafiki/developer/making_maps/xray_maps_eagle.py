@@ -21,7 +21,7 @@ exp=2000 #ks
 scale_change = 1  #Set to 5.75 at low z, 1 at high z
 
 #Extract galaxy quantities
-con = sql.connect("hhb195", password= "YCV99tfw")
+con = sql.connect("USERID", password= "PASSWORD") #INSERT YOUR OWN SQL INFORMATION
 sim_name = 'RefL0050N0752'
 snapshot = 27
 

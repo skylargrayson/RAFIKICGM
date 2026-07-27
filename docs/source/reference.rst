@@ -73,3 +73,13 @@ data_access.py
 .. autofunction:: rafiki.data_access.download_data
 
 
+mapmaking_functions.py
+----------------------
+
+.. autofunction:: rafiki.developer.making_maps.mapmaking_functions.determining_frb_size
+
+.. autofunction:: rafiki.developer.making_maps.mapmaking_functions.determining_caesar_conversion
+
+.. autofunction:: rafiki.developer.making_maps.mapmaking_functions.generating_sz_data
+
+.. autofunction:: rafiki.developer.making_maps.mapmaking_functions.generating_sz_data_eagle
