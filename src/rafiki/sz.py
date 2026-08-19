@@ -292,7 +292,7 @@ def CAP_filtering(image, pixel_scale, cap_radii ):
         x - center[0],
         y - center[1])
 
-    if np.max(r)>(np.sqrt(2)*np.max(cap_radii)):
+    if np.max(r)<(np.sqrt(2)*np.max(cap_radii)):
         raise ValueError("⚠️ Maximum CAP radii set too high. r*$\sqrt{2}$ must be less than the stamp size.")
     cap = []
 
