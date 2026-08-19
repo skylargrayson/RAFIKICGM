@@ -292,6 +292,8 @@ def CAP_filtering(image, pixel_scale, cap_radii ):
         x - center[0],
         y - center[1])
 
+    if np.max(r)>(np.sqrt(2)*np.max(cap_radii)):
+        raise ValueError("⚠️ Maximum CAP radii set too high. r*$\sqrt{2}$ must be less than the stamp size.")
     cap = []
 
     for rad in cap_radii:
@@ -396,11 +398,11 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         rad.create_dataset('error', data=np.array(err_a))
         rad['error'].attrs['units'] = ''
         rad.create_dataset('cap_radius', data=np.array(cap_radii))
-        rad['radius'].attrs['units'] = 'kpc'
-        rad.create_dataset('CAP_profile', data=np.array(y_cap))
-        rad['CAP_profile'].attrs['units'] = ''
-        rad.create_dataset('CAP_error', data=np.array(y_cap_err))
-        rad['CAP_error'].attrs['units'] = ''
+        rad['cap_radius'].attrs['units'] = 'kpc'
+        rad.create_dataset('cap_profile', data=np.array(y_cap))
+        rad['cap_profile'].attrs['units'] = ''
+        rad.create_dataset('cap_error', data=np.array(y_cap_err))
+        rad['cap_error'].attrs['units'] = ''
 
 
         if make_image:
