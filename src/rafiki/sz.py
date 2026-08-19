@@ -282,6 +282,25 @@ def make_stacked_images(stamps, kernel, label,config, index_sample, galaxy_redsh
         stacked_image = f.create_group('image')
         stacked_image.create_dataset('image_dat', data=np.array(image_dat))
 
+def CAP_filtering(image, pixel_scale, cap_radii ):
+    y, x = np.indices(image.shape)
+
+    center = np.array([
+            (x.max() - x.min()) / 2.0 + 1,
+            (y.max() - y.min()) / 2.0 + 1 ])
+    r = pixel_scale * np.hypot(
+        x - center[0],
+        y - center[1])
+
+    cap = []
+
+    for rad in cap_radii:
+        inner = r < rad
+        outer =  ((r >= rad) & (r < np.sqrt(2) * rad))
+        cap_value = (np.nansum(image[inner])- np.nansum(image[outer]) )
+        cap.append(cap_value)
+
+    return(cap)
 
 
 def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_redshifts):
@@ -324,6 +343,25 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         convolved_stamps.append(dd)
         aa=azimuthalAverage(dd, pixel_size_kpc, radial_bins, center = None)  
         radial_sample.append(aa)
+
+    #perform CAP filtering and stack: 
+    cap_radii = np.array(config['sz']['CAP_filtering_radii'])
+    cap_profiles = []
+    
+    for stamp in convolved_stamps:
+        rad = CAP_filtering(stamp, pixel_size_kpc, cap_radii)
+        cap_profiles.append(rad)
+
+    flip_cap = list(zip(*cap_profiles))    
+    y_cap = []
+    y_cap_err = []
+    for i in flip_cap:
+        y_cap.append(np.nanmean(i))
+        ii = (i,)
+        bootstrap_ci = bootstrap(ii, np.nanmean, confidence_level=0.95,
+                                random_state=1, method='percentile')
+        y_cap_err.append(bootstrap_ci.standard_error)
+
     flip = list(zip(*radial_sample))
     #Stack and bootstrap errors
     y_a = []
@@ -357,6 +395,13 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         rad['compton-y'].attrs['units'] = ''
         rad.create_dataset('error', data=np.array(err_a))
         rad['error'].attrs['units'] = ''
+        rad.create_dataset('cap_radius', data=np.array(cap_radii))
+        rad['radius'].attrs['units'] = 'kpc'
+        rad.create_dataset('CAP_profile', data=np.array(y_cap))
+        rad['CAP_profile'].attrs['units'] = ''
+        rad.create_dataset('CAP_error', data=np.array(y_cap_err))
+        rad['CAP_error'].attrs['units'] = ''
+
 
         if make_image:
             if 'image' in f:
