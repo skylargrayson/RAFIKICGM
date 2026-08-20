@@ -26,6 +26,14 @@ to download the entire simulation snapshot. These are described in detail in :do
 The tSZ pipeline uses maps of the Compton-y parameter for the full simulation volume, projected along each of the three simulation axes. During analysis, 
 RAFIKI-CGM extracts stamps around selected galaxies and stacks them to create final mock-observables.
 
+For the primary RAFIKI-CGM tSZ observable, radial profiles, there are three distinct stacked datasets returned. The first is the profile of the Compton-y value. This does not include 
+any background subtraction. At high-z, background subtraction can be performed by subtracting the average value in outer radii (as in `Meinke et al. 2023 <https://ui.adsabs.harvard.edu/abs/2023ApJ...954..119M/abstract>`_ and `Grayson et al. 2023 <https://ui.adsabs.harvard.edu/abs/2023ApJ...957...17G/abstract>`_).
+At lower redshifts, the two-halo term becomes more important and background subtraction is more complex. To that end, RAFIKI-CGM also outputs two different filtered profiles. 
+The "Delta" profile gives the value at each radius evaluated as :math:`\Delta y(R) = \bar{y}(r\lt R)-y(R)`. This follows work done with shear measurements in weak lensing studies.
+The other option is the "CAP" filtered profile, which gives the value at each radius as :math:`\delta y(R) = \Sigma y(r\lt R)-\Sigma y(R\lt r \lt \sqrt{2}R)`.
+
+Errors on these profiles are generated purely as the bootstrapped errors on the mean from the stack and do not take into account correlated errors between radial bins. 
+
 The X-ray pipeline instead uses precomputed particle catalogs containing the gas properties around the 500 most massive galaxies in each simulation box. 
 Unlike the tSZ analysis, X-ray observations depend strongly on instrument sensitivites, exposure time, and redshift. Working directly from particle data allows for increased user-specified flexibility 
 around these parameters throughout the entire forward modelling process. For the selected galaxies, particle data is passed through `pyXSIM <https://hea-www.cfa.harvard.edu/~jzuhone/pyxsim/index.html>`_ 

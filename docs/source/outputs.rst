@@ -22,12 +22,18 @@ Saved to  ``<directory/label>_szdat.hdf5``
     │   └── galaxy indices           (indices of the galaxy sample)  
     │   
     ├── radial_profile/              (if analysis.radial_profiles: true)
-    │   ├── radius                   (center of radial bins in arcminutes)
+    │   ├── radius                   (center of radial bins in kpc)
     │   ├── compton-y                (stacked Compton-y value at each radius)
-    │   └── error                    (error on Compton-y at each radius)
+    │   ├── error                    (error on Compton-y at each radius)
+    │   ├── delta_filter             (stacked value of Delta-filtered profile at each radius)
+    │   ├── delta_filter_error       (error on Delta-filtered profile at each radius)
+    │   ├── cap_radius               (radius of CAP filtering evaluation)
+    │   ├── cap_profile              (stacked value of CAP-filtered profile at each radius)
+    │   └── cap_error                (error on CAP-filtered value at each radius)
+    │
     │
     ├── moment_profiles/             (if analysis.moment_profiles: true)
-    │   ├── radius                   (center of radial bins in arcminutes)
+    │   ├── radius                   (center of radial bins in kpc)
     │   ├── moment_1                 (stacked m=1/m=0 ratio)
     │   ├── m1_error                 (error on stacked m=1/m=0 ratio)
     │   ├── moment_2                 (stacked m=2/m=0 ratio)

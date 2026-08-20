@@ -423,8 +423,8 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         rad['error'].attrs['units'] = ''
         rad.create_dataset('delta_filter', data=np.array(y_ad))
         rad['delta_filter'].attrs['units'] = ''
-        rad.create_dataset('delta_filter_err', data=np.array(err_ad))
-        rad['delta_filter_err'].attrs['units'] = ''
+        rad.create_dataset('delta_filter_error', data=np.array(err_ad))
+        rad['delta_filter_error'].attrs['units'] = ''
         rad.create_dataset('cap_radius', data=np.array(cap_radii))
         rad['cap_radius'].attrs['units'] = 'kpc'
         rad.create_dataset('cap_profile', data=np.array(y_cap))
