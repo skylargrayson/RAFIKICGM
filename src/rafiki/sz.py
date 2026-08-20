@@ -351,7 +351,7 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         #delta filtering
         delta_rad = []
         bin_areas =  np.pi * (radial_bins[1:]**2 - radial_bins[:-1]**2)
-        for i in range[1,len(aa)]:
+        for i in range(1,len(aa)):
             interior_mean = np.nansum(aa[:i]*bin_areas[:i])/np.nansum(bin_areas[:i]) #weighted by area
             delta_rad.append(interior_mean-aa[i])
 
