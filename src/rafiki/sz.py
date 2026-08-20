@@ -305,6 +305,8 @@ def CAP_filtering(image, pixel_scale, cap_radii ):
     return(cap)
 
 
+
+
 def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_redshifts):
     '''
     Convolves data and generates radial profiles for all galaxies in your sample
@@ -331,9 +333,10 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
 
     n_gal=len(galaxy_redshifts)
 
-    #Convolve and generate radial profile
+    #Convolve and generate radial profile and perform "delta-sigma" type filtering
     radial_sample = []
     convolved_stamps= [] 
+    delta_sample=[]
     for j in range(len(stamps)): 
         galaxy_redshift = galaxy_redshifts[j%n_gal]
         D_A = cosmo.angular_diameter_distance(galaxy_redshift).to(u.kpc).value
@@ -345,6 +348,14 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         convolved_stamps.append(dd)
         aa=azimuthalAverage(dd, pixel_size_kpc, radial_bins, center = None)  
         radial_sample.append(aa)
+        #delta filtering
+        delta_rad = []
+        bin_areas =  np.pi * (radial_bins[1:]**2 - radial_bins[:-1]**2)
+        for i in range[1,len(aa)]:
+            interior_mean = np.nansum(aa[:i]*bin_areas[:i])/np.nansum(bin_areas[:i]) #weighted by area
+            delta_rad.append(interior_mean-aa[i])
+
+        delta_sample.append(delta_rad)
 
     #perform CAP filtering and stack: 
     cap_radii = np.array(config['sz']['CAP_filtering_radii'])
@@ -364,6 +375,8 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
                                 random_state=1, method='percentile')
         y_cap_err.append(bootstrap_ci.standard_error)
 
+    
+
     flip = list(zip(*radial_sample))
     #Stack and bootstrap errors
     y_a = []
@@ -374,6 +387,17 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         bootstrap_ci = bootstrap(ii, np.nanmean, confidence_level=0.95,
                                 random_state=1, method='percentile')
         err_a.append(bootstrap_ci.standard_error)
+
+    flipd = list(zip(*delta_sample))
+    #Stack and bootstrap errors
+    y_ad = []
+    err_ad = []
+    for i in flipd:
+        y_ad.append(np.nanmean(i))
+        ii = (i,)
+        bootstrap_ci = bootstrap(ii, np.nanmean, confidence_level=0.95,
+                                random_state=1, method='percentile')
+        err_ad.append(bootstrap_ci.standard_error)
     
     x_a =  0.5 * (radial_bins[:-1] + radial_bins[1:])
     #Open metadata from config file
@@ -397,6 +421,10 @@ def make_radial_profiles(stamps, kernel, label,config, index_sample, galaxy_reds
         rad['compton-y'].attrs['units'] = ''
         rad.create_dataset('error', data=np.array(err_a))
         rad['error'].attrs['units'] = ''
+        rad.create_dataset('delta_filter', data=np.array(y_ad))
+        rad['delta_filter'].attrs['units'] = ''
+        rad.create_dataset('delta_filter_err', data=np.array(err_ad))
+        rad['delta_filter_err'].attrs['units'] = ''
         rad.create_dataset('cap_radius', data=np.array(cap_radii))
         rad['cap_radius'].attrs['units'] = 'kpc'
         rad.create_dataset('cap_profile', data=np.array(y_cap))
